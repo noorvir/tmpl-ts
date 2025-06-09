@@ -1,0 +1,31 @@
+{
+  "name": "@acme/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:dev": "prisma migrate dev && pnpm db:dump-schema",
+    "db:push": "prisma db push && pnpm db:dump-schema",
+    "db:apply": "prisma migrate deploy && pnpm db:dump-schema",
+    "db:dump-schema": "./scripts/dump-db-schema.sh",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+  },
+  "dependencies": {
+    "prisma": "link:better-auth/adapters/prisma",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@acme/config": "workspace:*",
+    "@acme/eslint-config": "workspace:*",
+    "@acme/prettier-config": "workspace:*",
+    "@acme/tsconfig": "workspace:*",
+    "dotenv-cli": "^8.0.0",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@acme/prettier-config"
+}

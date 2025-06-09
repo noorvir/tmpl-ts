@@ -1,0 +1,28 @@
+{
+  "name": "@acme/auth",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/auth.ts"
+    }
+  },
+  "dependencies": {
+    "@acme/db": "workspace:*",
+    "@better-auth/expo": "1.2.8",
+    "@prisma/client": "catalog:",
+    "better-auth": "1.2.8"
+  },
+  "devDependencies": {
+    "@acme/config": "workspace:*",
+    "@acme/eslint-config": "workspace:*",
+    "@acme/prettier-config": "workspace:*",
+    "@acme/tsconfig": "workspace:*",
+    "@types/react": "catalog:react19",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@acme/prettier-config"
+}
