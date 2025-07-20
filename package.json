@@ -27,11 +27,11 @@
     "ios": "expo run:ios"
   },
   "devDependencies": {
-    "@acme/prettier-config": "workspace:*",
+    "@acme/config": "workspace:*",
     "@turbo/gen": "^2.5.4",
     "prettier": "catalog:",
     "turbo": "^2.5.4",
     "typescript": "catalog:"
   },
-  "prettier": "@acme/prettier-config"
+  "prettier": "@acme/config/prettier"
 }

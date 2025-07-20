@@ -1,7 +1,6 @@
 packages:
   - apps/*
   - packages/*
-  - tooling/*
 catalog:
   eslint: ^9.28.0
   prettier: ^3.5.3

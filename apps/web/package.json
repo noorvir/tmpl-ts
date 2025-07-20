@@ -30,10 +30,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@acme/eslint-config": "workspace:*",
-    "@acme/prettier-config": "workspace:*",
-    "@acme/tailwind-config": "workspace:*",
-    "@acme/tsconfig": "workspace:*",
+    "@acme/config": "workspace:*",
     "@types/node": "^22.15.29",
     "@types/react": "catalog:react19",
     "@types/react-dom": "catalog:react19",
@@ -44,5 +41,5 @@
     "tailwindcss": "catalog:",
     "typescript": "catalog:"
   },
-  "prettier": "@acme/prettier-config"
+  "prettier": "@acme/config/prettier"
 }

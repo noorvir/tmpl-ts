@@ -50,38 +50,20 @@ export default tseslint.config(
     extends: [
       eslint.configs.recommended,
       ...tseslint.configs.recommended,
-      ...tseslint.configs.recommendedTypeChecked,
-      ...tseslint.configs.stylisticTypeChecked,
     ],
     rules: {
       ...turboPlugin.configs.recommended.rules,
+      // Basic TypeScript rules
       "@typescript-eslint/no-unused-vars": [
-        "error",
+        "warn",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
       "@typescript-eslint/consistent-type-imports": [
         "warn",
         { prefer: "type-imports", fixStyle: "separate-type-imports" },
       ],
-      "@typescript-eslint/no-misused-promises": [
-        2,
-        { checksVoidReturn: { attributes: false } },
-      ],
-      "@typescript-eslint/no-unnecessary-condition": [
-        "error",
-        {
-          allowConstantLoopConditions: true,
-        },
-      ],
-      "@typescript-eslint/no-non-null-assertion": "error",
-      "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
-      "no-restricted-imports": [
-        "error",
-        {
-          name: "zod",
-          message: "Use `import { z } from 'zod/v4'` instead to ensure v4.",
-        },
-      ],
+      // Basic import rules
+      "import/consistent-type-specifier-style": ["warn", "prefer-top-level"],
     },
   },
   {

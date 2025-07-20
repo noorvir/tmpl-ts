@@ -1,170 +1,56 @@
-import React, { useState } from "react";
-import { Button, Pressable, Text, TextInput, View } from "react-native";
+import React from "react";
+import { Button, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Link, Stack } from "expo-router";
-import { LegendList } from "@legendapp/list";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Stack } from "expo-router";
+import { useQuery } from "@tanstack/react-query";
 
-import type { RouterOutputs } from "~/utils/api";
 import { trpc } from "~/utils/api";
 import { authClient } from "~/utils/auth";
 
-function PostCard(props: {
-  post: RouterOutputs["post"]["all"][number];
-  onDelete: () => void;
-}) {
-  return (
-    <View className="flex flex-row rounded-lg bg-muted p-4">
-      <View className="flex-grow">
-        <Link
-          asChild
-          href={{
-            pathname: "/post/[id]",
-            params: { id: props.post.id },
-          }}
-        >
-          <Pressable className="">
-            <Text className="text-xl font-semibold text-primary">
-              {props.post.title}
-            </Text>
-            <Text className="mt-2 text-foreground">{props.post.content}</Text>
-          </Pressable>
-        </Link>
-      </View>
-      <Pressable onPress={props.onDelete}>
-        <Text className="font-bold uppercase text-primary">Delete</Text>
-      </Pressable>
-    </View>
-  );
-}
-
-function CreatePost() {
-  const queryClient = useQueryClient();
-
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-
-  const { mutate, error } = useMutation(
-    trpc.post.create.mutationOptions({
-      async onSuccess() {
-        setTitle("");
-        setContent("");
-        await queryClient.invalidateQueries(trpc.post.all.queryFilter());
-      },
-    }),
-  );
-
-  return (
-    <View className="mt-4 flex gap-2">
-      <TextInput
-        className="items-center rounded-md border border-input bg-background px-3 text-lg leading-[1.25] text-foreground"
-        value={title}
-        onChangeText={setTitle}
-        placeholder="Title"
-      />
-      {error?.data?.zodError?.fieldErrors.title && (
-        <Text className="mb-2 text-destructive">
-          {error.data.zodError.fieldErrors.title}
-        </Text>
-      )}
-      <TextInput
-        className="items-center rounded-md border border-input bg-background px-3 text-lg leading-[1.25] text-foreground"
-        value={content}
-        onChangeText={setContent}
-        placeholder="Content"
-      />
-      {error?.data?.zodError?.fieldErrors.content && (
-        <Text className="mb-2 text-destructive">
-          {error.data.zodError.fieldErrors.content}
-        </Text>
-      )}
-      <Pressable
-        className="flex items-center rounded bg-primary p-2"
-        onPress={() => {
-          mutate({
-            title,
-            content,
-          });
-        }}
-      >
-        <Text className="text-foreground">Create</Text>
-      </Pressable>
-      {error?.data?.code === "UNAUTHORIZED" && (
-        <Text className="mt-2 text-destructive">
-          You need to be logged in to create a post
-        </Text>
-      )}
-    </View>
-  );
-}
-
-function MobileAuth() {
-  const { data: session } = authClient.useSession();
-
-  return (
-    <>
-      <Text className="pb-2 text-center text-xl font-semibold text-white">
-        {session?.user.name ?? "Not logged in"}
-      </Text>
-      <Button
-        onPress={() =>
-          session
-            ? authClient.signOut()
-            : authClient.signIn.social({
-                provider: "discord",
-                callbackURL: "/",
-              })
-        }
-        title={session ? "Sign Out" : "Sign In With Discord"}
-        color={"#5B65E9"}
-      />
-    </>
-  );
-}
-
 export default function Index() {
-  const queryClient = useQueryClient();
+  const { data: session } = useQuery({
+    queryKey: ["session"],
+    queryFn: () => authClient.getSession(),
+  });
 
-  const postQuery = useQuery(trpc.post.all.queryOptions());
+  const handleSignIn = async () => {
+    // Add your sign in logic here
+    console.log("Sign in clicked");
+  };
 
-  const deletePostMutation = useMutation(
-    trpc.post.delete.mutationOptions({
-      onSettled: () =>
-        queryClient.invalidateQueries(trpc.post.all.queryFilter()),
-    }),
-  );
+  const handleSignOut = async () => {
+    await authClient.signOut();
+  };
 
   return (
     <SafeAreaView className="bg-background">
-      {/* Changes page title visible on the header */}
-      <Stack.Screen options={{ title: "Home Page" }} />
-      <View className="h-full w-full bg-background p-4">
-        <Text className="pb-2 text-center text-5xl font-bold text-foreground">
-          Create <Text className="text-primary">T3</Text> Turbo
+      <Stack.Screen options={{ title: "Home" }} />
+      <View className="h-full w-full p-4">
+        <Text className="py-2 text-3xl font-bold text-primary">
+          Welcome to T3 Turbo
         </Text>
+        
+        {session?.data?.user ? (
+          <View className="mt-8">
+            <Text className="text-lg text-foreground">
+              Hello, {session.data.user.name || session.data.user.email}!
+            </Text>
+            <Button title="Sign Out" onPress={handleSignOut} />
+          </View>
+        ) : (
+          <View className="mt-8">
+            <Text className="text-lg text-foreground">
+              You are not signed in.
+            </Text>
+            <Button title="Sign In" onPress={handleSignIn} />
+          </View>
+        )}
 
-        <MobileAuth />
-
-        <View className="py-2">
-          <Text className="font-semibold italic text-primary">
-            Press on a post
+        <View className="mt-8">
+          <Text className="text-base text-muted-foreground">
+            This is a clean T3 Turbo template with auth ready to go.
           </Text>
         </View>
-
-        <LegendList
-          data={postQuery.data ?? []}
-          estimatedItemSize={20}
-          keyExtractor={(item) => item.id}
-          ItemSeparatorComponent={() => <View className="h-2" />}
-          renderItem={(p) => (
-            <PostCard
-              post={p.item}
-              onDelete={() => deletePostMutation.mutate(p.item.id)}
-            />
-          )}
-        />
-
-        <CreatePost />
       </View>
     </SafeAreaView>
   );

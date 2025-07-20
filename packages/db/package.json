@@ -14,18 +14,16 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "prisma": "link:better-auth/adapters/prisma",
+    "@prisma/client": "catalog:",
     "zod": "catalog:"
   },
-  "devDependencies": {
-    "@acme/config": "workspace:*",
-    "@acme/eslint-config": "workspace:*",
-    "@acme/prettier-config": "workspace:*",
-    "@acme/tsconfig": "workspace:*",
+      "devDependencies": {
+      "@acme/config": "workspace:*",
     "dotenv-cli": "^8.0.0",
     "eslint": "catalog:",
     "prettier": "catalog:",
+    "prisma": "catalog:",
     "typescript": "catalog:"
   },
-  "prettier": "@acme/prettier-config"
+  "prettier": "@acme/config/prettier"
 }

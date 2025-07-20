@@ -1,16 +1,7 @@
-import { Suspense } from "react";
-
-import { HydrateClient, prefetch, trpc } from "~/trpc/server";
+import { HydrateClient } from "~/trpc/server";
 import { AuthShowcase } from "./_components/auth-showcase";
-import {
-  CreatePostForm,
-  PostCardSkeleton,
-  PostList,
-} from "./_components/posts";
 
 export default function HomePage() {
-  prefetch(trpc.post.all.queryOptions());
-
   return (
     <HydrateClient>
       <main className="container h-screen py-16">
@@ -20,19 +11,14 @@ export default function HomePage() {
           </h1>
           <AuthShowcase />
 
-          <CreatePostForm />
-          <div className="w-full max-w-2xl overflow-y-scroll">
-            <Suspense
-              fallback={
-                <div className="flex w-full flex-col gap-4">
-                  <PostCardSkeleton />
-                  <PostCardSkeleton />
-                  <PostCardSkeleton />
-                </div>
-              }
-            >
-              <PostList />
-            </Suspense>
+          <div className="w-full max-w-2xl">
+            <div className="rounded-lg border bg-card p-6 text-center">
+              <h2 className="text-2xl font-semibold mb-4">Ready to Build</h2>
+              <p className="text-muted-foreground">
+                This is a clean T3 Turbo template with better-auth and Prisma ready to go.
+                Start building your application by adding your own components and API routes.
+              </p>
+            </div>
           </div>
         </div>
       </main>
