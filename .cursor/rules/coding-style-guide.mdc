@@ -1,0 +1,150 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Code Review Comments
+
+This file is modelled after [Go code review comments](https://go.dev/wiki/CodeReviewComments). It's not comprehensive.
+
+## General
+
+### Indent if flow
+
+Try to keep the normal code path at a minimal indentation. This improves readability. Eg, return/break/continue/throw
+early from an if statement.
+
+Instead of:
+
+```ts
+if (condition) {
+  console.log('condition A');
+} else {
+  console.log('condition B');
+}
+```
+
+Do:
+
+```ts
+if (condition) {
+  console.log('condition A');
+  return;
+}
+
+console.log('condition B');
+```
+
+Obviously this is not always possible but more often than not you can do this. If you find yourself
+needing to reach for the else too often, your function can probably be refactored.
+
+### Naming
+
+Inspired by Shopify's GraphQL guide
+
+Prefix functions, methods, etc with the semantic concept they most closely relate to.
+For example, `userGet` instead of `getUser`. This lets you organize code alphabetically.
+
+```ts
+function userGet(id: string) {
+  // ...
+}
+
+function userGetById(id: string) {
+  // ...
+}
+
+function userGetByEmail(email: string) {
+  // ...
+}
+...
+```
+
+### Composability
+
+Keep functions/methods small and focused. Roughly guideline is 50 lines of code.
+
+### Dependency Injection
+
+Use dependency injection where possible. It's normally possible ~90 of the time. This
+make it easier to test code. For instance:
+
+Instead of:
+
+```ts
+function getUserEmail(userId: string) {
+  const user = getUser(userId);
+  const email = user.emails.find((u) => ...);
+}
+```
+
+Do:
+
+```ts
+function getUserEmail(user: User) {
+  const email = user.find((u) => ...);
+}
+```
+
+You can even make the function arguments more minimal:
+
+```ts
+function getUserEmail(user: { emails: string[] }) {
+  const email = user.emails.find((u) => ...);
+}
+```
+
+### File names
+
+Use `kebab-case` for file names (including folder and files with components).
+
+### Args
+
+Use `args` as the name of the argument that contains all the parameters
+for a function. This makes it easier to add new parameters in the future
+and also verify you're passing in the correct parameters.
+
+```ts
+function myFunction(args: { param1: string, param2: number }) {
+  // ...
+}
+
+// vs the case where its easier to pass incorrect parameters
+
+function myFunction(param1: string, param2: number) {
+  // ...
+}
+
+myFunction(param1, param2) !== myFunction(param2, param1)
+```
+
+### Logging
+
+We use structured logging. Prefer using a base message and adding fields to the object.
+
+```ts
+// Instead of
+console.log(`New user ${name} signed up with email ${email}`);
+
+// Do
+logger.info(`New user signed up`, { email, name });
+```
+
+This lets you search for logs using the message and filter by fields.
+
+## Frontend
+
+### Handler props
+
+The handler function should be named `handle<Event>` in the defining function and
+passed down as `on<Event>` to the component.
+
+```tsx
+function MyComponent() {
+  const handleClick = () => {
+    console.log('clicked');
+  };
+
+  return <button onClick={handleClick}>Click me</button>;
+}
+```
