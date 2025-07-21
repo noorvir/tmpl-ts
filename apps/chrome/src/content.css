@@ -1,0 +1,9 @@
+/* Content script styles */
+.acme-extension-widget {
+  all: initial;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.acme-extension-widget * {
+  box-sizing: border-box;
+}
