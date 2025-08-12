@@ -1,34 +1,13 @@
-# react-ts
+# @acme/desktop
 
-An Electron application with React and TypeScript
+Electron desktop app integrated with the monorepo shared UI and tRPC.
 
-## Recommended IDE Setup
+- Tray menubar app
+- Global hotkey (configurable) to show overlay and record mic waveform
+- Clipboard read/write via preload
+- Tailwind + @acme/ui styling
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-
-## Project Setup
-
-### Install
-
-```bash
-$ pnpm install
-```
-
-### Development
-
-```bash
-$ pnpm dev
-```
-
-### Build
-
-```bash
-# For windows
-$ pnpm build:win
-
-# For macOS
-$ pnpm build:mac
-
-# For Linux
-$ pnpm build:linux
-```
+Scripts:
+- `pnpm dev` - run electron in dev
+- `pnpm typecheck` - TypeScript typecheck
+- `pnpm build` - production build

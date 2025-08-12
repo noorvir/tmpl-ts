@@ -1,5 +1,5 @@
 {
-  "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
+  "extends": "@acme/config/typescript/base",
   "include": [
     "src/renderer/src/env.d.ts",
     "src/renderer/src/**/*",
@@ -9,6 +9,7 @@
   "compilerOptions": {
     "composite": true,
     "jsx": "react-jsx",
+    "lib": ["ES2022", "dom"],
     "baseUrl": ".",
     "paths": {
       "@renderer/*": [
