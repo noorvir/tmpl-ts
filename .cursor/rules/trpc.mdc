@@ -1,0 +1,102 @@
+---
+description: tRPC usage patterns and best practices
+globs: /**/*.tsx
+alwaysApply: false
+---
+
+# tRPC Usage Guide
+
+This project uses tRPC with React Query for type-safe API calls. Follow these patterns:
+
+## Setup and Imports
+
+```typescript
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { toast } from 'sonner';
+
+import { useTRPC } from '@/trpc/client';
+```
+
+## Basic Usage Pattern
+
+```typescript
+export default function MyComponent() {
+  const trpc = useTRPC();
+
+  // For queries - use the Q abbreviation
+  const dataQ = useQuery(trpc.router.procedure.queryOptions());
+  const data = dataQ.data || [];
+
+  // For mutations - use the M abbreviation
+  const createM = useMutation(trpc.router.create.mutationOptions());
+  const updateM = useMutation(trpc.router.update.mutationOptions());
+}
+```
+
+## Query Patterns
+
+- Use `useQuery(trpc.{router}.{procedure}.queryOptions())` for data fetching
+- Access data with `query.data` and provide fallbacks: `query.data || []`
+- Use `query.refetch()` to refresh data after mutations
+
+## Mutation Patterns
+
+- Use `useMutation(trpc.{router}.{procedure}.mutationOptions())` for data modifications
+- Call `mutateAsync()` for async operations with error handling
+- Use `isPending` for loading states in UI elements
+
+## Invalidating Queries
+
+- When making a mutation, you should invalidate any queries that depend on the data that is being mutated.
+- To properly handle invalidation, use the following pattern:
+
+```typescript
+const mutation = useMutation(trpc.router.procedure.mutationOptions());
+
+mutation.mutate(
+  {
+    id,
+  },
+  {
+    // Make sure to _return_ the Promise from the query invalidation
+    // so that the mutation stays in `pending` state until the refetch is finished
+    onSettled: () => 
+      queryClient.invalidateQueries({
+        queryKey: trpc.router.procedure.queryKey({ id }),
+      }),
+  },
+);
+```
+
+## Error Handling
+
+```typescript
+const handleAction = async (event: React.MouseEvent, id: string) => {
+  event.stopPropagation(); // if needed
+  try {
+    await mutation.mutateAsync({ id });
+    query.refetch();
+    toast.success('Action completed successfully');
+  } catch (error: any) {
+    toast.error(error.message || 'Action failed');
+  }
+};
+```
+
+## Loading States
+
+- Use `mutation.isPending` to disable buttons during operations
+- Show loading indicators: `disabled={mutation.isPending}`
+
+## Data Refresh
+
+- Always call `query.refetch()` after successful mutations
+- This ensures UI stays in sync with server state
+
+## Best Practices
+
+1. Destructure data with fallbacks: `const items = query.data?.items || []`
+2. Handle loading states in UI components
+3. Use `stopPropagation()` when buttons are inside clickable rows
+4. Provide meaningful error messages to users
+5. Refresh relevant queries after mutations to keep UI synchronized
