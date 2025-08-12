@@ -55,11 +55,5 @@
     "typescript": "catalog:",
     "vite": "^7.0.5"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "electron",
-      "esbuild"
-    ]
-  },
   "prettier": "@acme/config/prettier"
 }
