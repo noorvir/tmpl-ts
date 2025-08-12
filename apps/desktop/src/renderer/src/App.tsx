@@ -48,6 +48,7 @@ function Main(): React.JSX.Element {
 function Settings(): React.JSX.Element {
   const [hotkey, setHotkey] = useState("");
   const [saving, setSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
     window.api.getHotkey().then(setHotkey).catch(() => undefined);
@@ -55,10 +56,20 @@ function Settings(): React.JSX.Element {
 
   const save = async () => {
     setSaving(true);
+    setSaveMessage(null);
     try {
-      await window.api.setHotkey(hotkey);
+      const result = await window.api.setHotkey(hotkey);
+      if (result.success) {
+        setSaveMessage({ type: 'success', text: 'Hotkey saved successfully!' });
+      } else {
+        setSaveMessage({ type: 'error', text: result.error || 'Failed to save hotkey' });
+      }
+    } catch (error) {
+      setSaveMessage({ type: 'error', text: 'Failed to save hotkey' });
     } finally {
       setSaving(false);
+      // Clear message after 3 seconds
+      setTimeout(() => setSaveMessage(null), 3000);
     }
   };
 
@@ -68,9 +79,22 @@ function Settings(): React.JSX.Element {
       <div className="mt-4 grid gap-3">
         <Label htmlFor="hk">Global Hotkey (Electron accelerator)</Label>
         <Input id="hk" value={hotkey} onChange={(e) => setHotkey(e.target.value)} placeholder="e.g. CommandOrControl+Shift+R" />
+        {saveMessage && (
+          <div className={`text-sm ${saveMessage.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+            {saveMessage.text}
+          </div>
+        )}
         <div className="flex gap-2">
-          <Button onClick={save} disabled={saving}>Save</Button>
+          <Button onClick={save} disabled={saving}>{saving ? 'Saving...' : 'Save'}</Button>
           <Button variant="secondary" onClick={() => window.api.goHome()}>Back</Button>
+        </div>
+        <div className="text-xs text-muted-foreground">
+          <p>Common shortcuts:</p>
+          <ul className="mt-1 list-disc list-inside">
+            <li>CommandOrControl+Shift+R (recommended)</li>
+            <li>Alt+Shift+R</li>
+            <li>Control+Alt+R</li>
+          </ul>
         </div>
       </div>
     </div>

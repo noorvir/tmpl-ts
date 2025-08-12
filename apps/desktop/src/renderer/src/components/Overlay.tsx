@@ -55,7 +55,7 @@ export default function Overlay(): React.JSX.Element {
         analyserRef.current = null;
         mediaRecorderRef.current = null;
         setRecording(false);
-        window.api.hideOverlay();
+        // Don't call hideOverlay here - the main process handles hiding after receiving overlay:stop
       }
     };
 

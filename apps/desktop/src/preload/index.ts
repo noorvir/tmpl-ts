@@ -42,7 +42,7 @@ const api = {
 
   // settings
   getHotkey: async (): Promise<string> => ipcRenderer.invoke('settings:getHotkey'),
-  setHotkey: async (accelerator: string): Promise<void> => ipcRenderer.invoke('settings:setHotkey', accelerator),
+  setHotkey: async (accelerator: string): Promise<{ success: boolean; error?: string }> => ipcRenderer.invoke('settings:setHotkey', accelerator),
   openSettings: (): void => {
     location.hash = '#settings'
   },

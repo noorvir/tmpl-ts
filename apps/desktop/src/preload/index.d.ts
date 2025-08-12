@@ -16,7 +16,7 @@ declare global {
       removeOverlayStop: (cb: () => void) => void
       saveAudio: (buffer: Buffer) => Promise<string>
       getHotkey: () => Promise<string>
-      setHotkey: (accelerator: string) => Promise<void>
+      setHotkey: (accelerator: string) => Promise<{ success: boolean; error?: string }>
       openSettings: () => void
       goHome: () => void
     }
