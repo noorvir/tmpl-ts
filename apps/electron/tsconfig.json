@@ -1,0 +1,12 @@
+{
+  "extends": "../../packages/config/typescript/base.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.cache/tsbuildinfo/tsconfig.tsbuildinfo",
+    "baseUrl": ".",
+    "paths": {},
+    "types": ["node"],
+    "resolveJsonModule": true
+  },
+  "include": ["src", "vite-env.d.ts"],
+  "exclude": ["dist", "node_modules"]
+}

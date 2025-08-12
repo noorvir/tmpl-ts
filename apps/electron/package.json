@@ -1,0 +1,55 @@
+{
+  "name": "electron-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/main.js",
+  "author": "",
+  "description": "Minimal overlay paste-on-stop desktop utility (macOS/Windows)",
+  "scripts": {
+    "dev": "run-p dev:renderer dev:main:build dev:electron",
+    "dev:renderer": "vite --config vite.config.ts",
+    "dev:main:build": "tsc -p tsconfig.main.json --watch",
+    "dev:electron": "cross-env VITE_DEV_SERVER_URL=http://localhost:5173 nodemon -w dist --ext js --exec \"electron .\"",
+    "build": "run-s build:renderer build:main",
+    "build:renderer": "vite build --config vite.config.ts",
+    "build:main": "tsc -p tsconfig.main.json && node scripts/postbuild.cjs",
+    "start": "electron .",
+    "package": "electron-builder -c electron-builder.config.cjs",
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "active-win": "^9.0.0",
+    "electron-store": "^9.0.0",
+    "zod": "^3.25.49",
+    "@nut-tree/nut-js": "^5.9.0",
+    "node-window-manager": "^2.2.5",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "devDependencies": {
+    "electron": "^31.7.6",
+    "electron-builder": "^25.1.8",
+    "@types/node": "^22.10.2",
+    "@types/electron": "^1.6.12",
+    "@types/node-window-manager": "^2.2.3",
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.5",
+    "typescript": "^5.8.3",
+    "vite": "^5.4.11",
+    "@vitejs/plugin-react": "^4.3.4",
+    "esbuild": "^0.24.2",
+    "react": "catalog:react19",
+    "react-dom": "catalog:react19",
+    "nodemon": "^3.1.7",
+    "tsx": "^4.19.2",
+    "concurrently": "^9.1.2",
+    "npm-run-all": "^4.1.5",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.28.0"
+  }
+}

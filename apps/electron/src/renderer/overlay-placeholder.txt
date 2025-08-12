@@ -1,0 +1,1 @@
+This renderer implements the overlay window variant for the Electron template.
