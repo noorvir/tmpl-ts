@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@acme/ui/button";
 
 export function AuthShowcase({
@@ -8,7 +8,7 @@ export function AuthShowcase({
 }: {
   session: { user: { name?: string | null } } | null;
 }) {
-  const router = useRouter();
+  const queryClient = useQueryClient();
 
   if (!session) {
     return (
@@ -35,7 +35,7 @@ export function AuthShowcase({
         onSubmit={async (e) => {
           e.preventDefault();
           await fetch("/api/auth/signout", { method: "POST" });
-          router.invalidate();
+          await queryClient.invalidateQueries({ queryKey: ["session"] });
         }}
       >
         <Button size="lg" type="submit">

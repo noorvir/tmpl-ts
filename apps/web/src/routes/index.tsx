@@ -1,17 +1,23 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { AuthShowcase } from "~/_components/auth-showcase";
-import { getSession } from "~/auth/server";
 
 export const Route = createFileRoute("/")({
   component: Home,
-  loader: async () => {
-    const session = await getSession();
-    return { session };
-  },
 });
 
 function Home() {
-  const { session } = Route.useLoaderData();
+  const { data: session } = useQuery({
+    queryKey: ["session"],
+    queryFn: async () => {
+      const response = await fetch("/api/auth/session");
+      if (!response.ok) {
+        return null;
+      }
+      const data = await response.json();
+      return data?.data?.session ?? null;
+    },
+  });
 
   return (
     <main className="container h-screen py-16">
@@ -19,7 +25,7 @@ function Home() {
         <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
           Create <span className="text-primary">T3</span> Turbo
         </h1>
-        <AuthShowcase session={session} />
+        <AuthShowcase session={session ?? null} />
 
         <div className="w-full max-w-2xl">
           <div className="rounded-lg border bg-card p-6 text-center">

@@ -1,62 +1,50 @@
 import { createRootRoute } from "@tanstack/react-router";
 import { Outlet, ScrollRestoration } from "@tanstack/react-router";
-import type { ReactNode } from "react";
 
-import { cn } from "@acme/ui";
 import { ThemeProvider, ThemeToggle } from "@acme/ui/theme";
 import { Toaster } from "@acme/ui/toast";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@acme/ui/dropdown-menu";
+import { Button } from "@acme/ui/button";
+import { Card } from "@acme/ui/card";
+import { Badge } from "@acme/ui/badge";
 
 import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/globals.css";
 
-function RootDocument({ children }: { children: ReactNode }) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Create T3 Turbo</title>
-        <meta
-          name="description"
-          content="Simple monorepo with shared backend for web & mobile apps"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans text-foreground antialiased",
-        )}
-        style={{
-          fontFamily: "Geist, sans-serif",
-        }}
-      >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <TRPCReactProvider>{children}</TRPCReactProvider>
-          <div className="absolute bottom-4 right-4">
-            <ThemeToggle />
-          </div>
-          <Toaster />
-        </ThemeProvider>
-        <ScrollRestoration />
-      </body>
-    </html>
-  );
-}
-
 export const Route = createRootRoute({
   component: () => (
-    <RootDocument>
-      <Outlet />
-    </RootDocument>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <TRPCReactProvider>
+        <Outlet />
+      </TRPCReactProvider>
+      <div className="absolute bottom-4 right-4 flex gap-2">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">Components</Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>Example Components</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <Badge>Badge</Badge>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Card className="p-2">Card</Card>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <ThemeToggle />
+      </div>
+      <Toaster />
+      <ScrollRestoration />
+    </ThemeProvider>
   ),
 });
