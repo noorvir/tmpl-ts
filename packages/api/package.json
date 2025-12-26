@@ -21,15 +21,15 @@
   "dependencies": {
     "@acme/auth": "workspace:*",
     "@acme/db": "workspace:*",
-    "@trpc/server": "catalog:",
+    "@trpc/server": "^11.2.0",
     "superjson": "2.2.2",
-    "zod": "catalog:"
+    "zod": "^3.25.49"
   },
   "devDependencies": {
     "@acme/config": "workspace:*",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
-    "typescript": "catalog:"
+    "eslint": "^9.28.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3"
   },
   "prettier": "@acme/config/prettier"
 }

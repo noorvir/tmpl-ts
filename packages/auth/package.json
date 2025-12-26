@@ -11,15 +11,15 @@
   "dependencies": {
     "@acme/db": "workspace:*",
     "@better-auth/expo": "1.2.8",
-    "@prisma/client": "catalog:",
+    "@prisma/client": "^6.5.0",
     "better-auth": "1.2.8"
   },
-      "devDependencies": {
-      "@acme/config": "workspace:*",
-    "@types/react": "catalog:react19",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
-    "typescript": "catalog:"
+  "devDependencies": {
+    "@acme/config": "workspace:*",
+    "@types/react": "^19.1.6",
+    "eslint": "^9.28.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3"
   },
   "prettier": "@acme/config/prettier"
 }

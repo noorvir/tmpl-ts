@@ -4,7 +4,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 
-import { trpc } from "~/utils/api";
 import { authClient } from "~/utils/auth";
 
 export default function Index() {
