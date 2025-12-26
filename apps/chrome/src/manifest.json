@@ -3,10 +3,7 @@
   "name": "Acme Chrome Extension",
   "version": "0.1.0",
   "description": "A React-based Chrome extension built with the Acme template",
-  "permissions": [
-    "activeTab",
-    "storage"
-  ],
+  "permissions": ["activeTab", "storage"],
   "background": {
     "service_worker": "background.js"
   },

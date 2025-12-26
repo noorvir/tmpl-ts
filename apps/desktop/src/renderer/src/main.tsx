@@ -1,12 +1,16 @@
-import React from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App'
-import './index.css'
-import { ThemeProvider } from '@acme/ui/theme'
-import { Toaster } from '@acme/ui/toast'
-import { TRPCReactProvider } from './trpc/react'
+import React from "react";
+import { createRoot } from "react-dom/client";
 
-createRoot(document.getElementById('root')!).render(
+import App from "./App";
+
+import "./index.css";
+
+import { ThemeProvider } from "@acme/ui/theme";
+import { Toaster } from "@acme/ui/toast";
+
+import { TRPCReactProvider } from "./trpc/react";
+
+createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <TRPCReactProvider>
@@ -14,5 +18,5 @@ createRoot(document.getElementById('root')!).render(
         <Toaster />
       </TRPCReactProvider>
     </ThemeProvider>
-  </React.StrictMode>
-)
+  </React.StrictMode>,
+);

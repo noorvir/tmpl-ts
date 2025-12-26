@@ -13,7 +13,9 @@ export default function Overlay(): React.JSX.Element {
     const handleStart = async () => {
       try {
         await window.api.ensureMicPermission();
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+        });
         const context = new AudioContext();
         const source = context.createMediaStreamSource(stream);
         const analyser = context.createAnalyser();
@@ -109,10 +111,14 @@ export default function Overlay(): React.JSX.Element {
   };
 
   return (
-    <div className="pointer-events-auto rounded-md border border-border bg-background/90 p-3 shadow-xl">
-      <div className="text-sm text-muted-foreground">{recording ? "Recording..." : error ? error : "Idle"}</div>
+    <div className="border-border bg-background/90 pointer-events-auto rounded-md border p-3 shadow-xl">
+      <div className="text-muted-foreground text-sm">
+        {recording ? "Recording..." : error ? error : "Idle"}
+      </div>
       <canvas ref={canvasRef} width={360} height={120} className="mt-2 block" />
-      <div className="mt-2 text-xs text-muted-foreground">Press the global hotkey again to stop.</div>
+      <div className="text-muted-foreground mt-2 text-xs">
+        Press the global hotkey again to stop.
+      </div>
     </div>
   );
 }

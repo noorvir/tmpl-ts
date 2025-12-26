@@ -1,5 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, Link } from "@tanstack/react-router";
+
 import { AuthShowcase } from "~/_components/auth-showcase";
 
 export const Route = createFileRoute("/")({
@@ -28,8 +29,8 @@ function Home() {
         <AuthShowcase session={session ?? null} />
 
         <div className="w-full max-w-2xl">
-          <div className="rounded-lg border bg-card p-6 text-center">
-            <h2 className="text-2xl font-semibold mb-4">Ready to Build</h2>
+          <div className="bg-card rounded-lg border p-6 text-center">
+            <h2 className="mb-4 text-2xl font-semibold">Ready to Build</h2>
             <p className="text-muted-foreground mb-4">
               This is a clean TypeScript template with better-auth and Prisma
               ready to go. Start building your application by adding your own

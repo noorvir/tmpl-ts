@@ -25,20 +25,20 @@ export default function Index() {
     <SafeAreaView className="bg-background">
       <Stack.Screen options={{ title: "Home" }} />
       <View className="h-full w-full p-4">
-        <Text className="py-2 text-3xl font-bold text-primary">
+        <Text className="text-primary py-2 text-3xl font-bold">
           TypeScript Template
         </Text>
-        
+
         {session?.data?.user ? (
           <View className="mt-8">
-            <Text className="text-lg text-foreground">
+            <Text className="text-foreground text-lg">
               Hello, {session.data.user.name || session.data.user.email}!
             </Text>
             <Button title="Sign Out" onPress={handleSignOut} />
           </View>
         ) : (
           <View className="mt-8">
-            <Text className="text-lg text-foreground">
+            <Text className="text-foreground text-lg">
               You are not signed in.
             </Text>
             <Button title="Sign In" onPress={handleSignIn} />
@@ -46,7 +46,7 @@ export default function Index() {
         )}
 
         <View className="mt-8">
-          <Text className="text-base text-muted-foreground">
+          <Text className="text-muted-foreground text-base">
             This is a clean TypeScript template with auth ready to go.
           </Text>
         </View>

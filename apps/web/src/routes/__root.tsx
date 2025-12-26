@@ -1,13 +1,14 @@
+import { useQuery } from "@tanstack/react-query";
 import {
   createRootRoute,
   HeadContent,
   Outlet,
   Scripts,
 } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
 
-import { ThemeProvider, ThemeToggle } from "@acme/ui/theme";
-import { Toaster } from "@acme/ui/toast";
+import { Badge } from "@acme/ui/badge";
+import { Button } from "@acme/ui/button";
+import { Card } from "@acme/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,13 +17,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@acme/ui/dropdown-menu";
-import { Button } from "@acme/ui/button";
-import { Card } from "@acme/ui/card";
-import { Badge } from "@acme/ui/badge";
-
-import { TRPCReactProvider, useTRPC } from "~/trpc/react";
+import { ThemeProvider, ThemeToggle } from "@acme/ui/theme";
+import { Toaster } from "@acme/ui/toast";
 
 import appCss from "~/globals.css?url";
+import { TRPCReactProvider, useTRPC } from "~/trpc/react";
 
 export const Route = createRootRoute({
   head: () => ({

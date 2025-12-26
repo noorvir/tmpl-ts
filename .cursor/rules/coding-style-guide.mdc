@@ -38,27 +38,6 @@ console.log('condition B');
 Obviously this is not always possible but more often than not you can do this. If you find yourself
 needing to reach for the else too often, your function can probably be refactored.
 
-### Naming
-
-Inspired by Shopify's GraphQL guide
-
-Prefix functions, methods, etc with the semantic concept they most closely relate to.
-For example, `userGet` instead of `getUser`. This lets you organize code alphabetically.
-
-```ts
-function userGet(id: string) {
-  // ...
-}
-
-function userGetById(id: string) {
-  // ...
-}
-
-function userGetByEmail(email: string) {
-  // ...
-}
-...
-```
 
 ### Composability
 

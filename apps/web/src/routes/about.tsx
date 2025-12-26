@@ -12,8 +12,8 @@ function About() {
           About
         </h1>
         <div className="w-full max-w-2xl">
-          <div className="rounded-lg border bg-card p-6 text-center">
-            <h2 className="text-2xl font-semibold mb-4">About This Project</h2>
+          <div className="bg-card rounded-lg border p-6 text-center">
+            <h2 className="mb-4 text-2xl font-semibold">About This Project</h2>
             <p className="text-muted-foreground mb-6">
               A TypeScript monorepo template with better-auth and Prisma. Built
               with TanStack Start for file-based routing.
@@ -30,4 +30,3 @@ function About() {
     </main>
   );
 }
-
