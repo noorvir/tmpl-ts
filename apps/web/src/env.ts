@@ -14,10 +14,6 @@ export const env = createEnv({
   server: {
     DATABASE_URL: z.string().url().optional(),
     AUTH_SECRET: z.string().min(1).optional(),
-    VERCEL_ENV: z
-      .enum(["production", "preview", "development"])
-      .optional(),
-    VERCEL_URL: z.string().optional(),
   },
 
   /**
@@ -35,8 +31,6 @@ export const env = createEnv({
     NODE_ENV: import.meta.env.MODE,
     DATABASE_URL: import.meta.env.DATABASE_URL,
     AUTH_SECRET: import.meta.env.AUTH_SECRET,
-    VERCEL_ENV: import.meta.env.VERCEL_ENV,
-    VERCEL_URL: import.meta.env.VERCEL_URL,
   },
   skipValidation: !!import.meta.env.CI,
 });
