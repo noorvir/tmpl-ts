@@ -27,7 +27,7 @@ export default function Index() {
       <Stack.Screen options={{ title: "Home" }} />
       <View className="h-full w-full p-4">
         <Text className="py-2 text-3xl font-bold text-primary">
-          Welcome to T3 Turbo
+          TypeScript Template
         </Text>
         
         {session?.data?.user ? (
@@ -48,7 +48,7 @@ export default function Index() {
 
         <View className="mt-8">
           <Text className="text-base text-muted-foreground">
-            This is a clean T3 Turbo template with auth ready to go.
+            This is a clean TypeScript template with auth ready to go.
           </Text>
         </View>
       </View>

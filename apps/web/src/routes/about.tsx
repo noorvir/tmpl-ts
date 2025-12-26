@@ -15,7 +15,7 @@ function About() {
           <div className="rounded-lg border bg-card p-6 text-center">
             <h2 className="text-2xl font-semibold mb-4">About This Project</h2>
             <p className="text-muted-foreground mb-6">
-              A T3 Turbo monorepo template with better-auth and Prisma. Built
+              A TypeScript monorepo template with better-auth and Prisma. Built
               with TanStack Start for file-based routing.
             </p>
             <Link

@@ -23,7 +23,7 @@ function Home() {
     <main className="container h-screen py-16">
       <div className="flex flex-col items-center justify-center gap-4">
         <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-          Create <span className="text-primary">T3</span> Turbo
+          TypeScript Template
         </h1>
         <AuthShowcase session={session ?? null} />
 
@@ -31,7 +31,7 @@ function Home() {
           <div className="rounded-lg border bg-card p-6 text-center">
             <h2 className="text-2xl font-semibold mb-4">Ready to Build</h2>
             <p className="text-muted-foreground mb-4">
-              This is a clean T3 Turbo template with better-auth and Prisma
+              This is a clean TypeScript template with better-auth and Prisma
               ready to go. Start building your application by adding your own
               components and API routes.
             </p>
