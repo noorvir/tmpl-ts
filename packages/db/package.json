@@ -5,25 +5,25 @@
   "type": "module",
   "scripts": {
     "db:generate": "prisma generate",
-    "db:dev": "prisma migrate dev && pnpm db:dump-schema",
-    "db:push": "prisma db push && pnpm db:dump-schema",
-    "db:apply": "prisma migrate deploy && pnpm db:dump-schema",
+    "db:dev": "prisma migrate dev && bun run db:dump-schema",
+    "db:push": "prisma db push && bun run db:dump-schema",
+    "db:apply": "prisma migrate deploy && bun run db:dump-schema",
     "db:dump-schema": "./scripts/dump-db-schema.sh",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@prisma/client": "catalog:",
-    "zod": "catalog:"
+    "@prisma/client": "^6.5.0",
+    "zod": "^3.25.49"
   },
-      "devDependencies": {
-      "@acme/config": "workspace:*",
+  "devDependencies": {
+    "@acme/config": "workspace:*",
     "dotenv-cli": "^8.0.0",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
-    "prisma": "catalog:",
-    "typescript": "catalog:"
+    "eslint": "^9.28.0",
+    "prettier": "^3.5.3",
+    "prisma": "^6.5.0",
+    "typescript": "^5.8.3"
   },
   "prettier": "@acme/config/prettier"
 }
