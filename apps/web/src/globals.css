@@ -1,2 +1,6 @@
 @import "tailwindcss";
 @import "@acme/ui/src/styles/globals.css";
+
+/* Tell Tailwind v4 where to scan for classes */
+@source "../../../packages/ui/src/**/*.{ts,tsx}";
+@source "./**/*.{ts,tsx}";
