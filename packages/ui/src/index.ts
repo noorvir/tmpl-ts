@@ -1,6 +1,2 @@
-import { cx } from "class-variance-authority";
-import { twMerge } from "tailwind-merge";
+export { cn } from "./lib/utils";
 
-const cn = (...inputs: Parameters<typeof cx>) => twMerge(cx(inputs));
-
-export { cn };

@@ -7,7 +7,8 @@
     },
     "jsx": "react-native",
     "checkJs": false,
-    "moduleSuffixes": [".ios", ".android", ".native", ""]
+    "moduleSuffixes": [".ios", ".android", ".native", ""],
+    "types": ["@types/node"]
   },
   "include": [
     "src",
