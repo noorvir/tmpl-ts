@@ -1,29 +1,30 @@
 {
-  "name": "@acme/nextjs",
+  "name": "@acme/web",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm with-env next build",
-    "clean": "git clean -xdf .cache .next .turbo node_modules",
-    "dev": "pnpm with-env next dev --turbopack",
+    "build": "vite build",
+    "clean": "git clean -xdf .cache .output .vinxi .turbo node_modules",
+    "dev": "vite dev",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "start": "pnpm with-env next start",
-    "typecheck": "tsc --noEmit",
-    "with-env": "dotenv -e ../../.env --"
+    "start": "vite preview",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@acme/api": "workspace:*",
     "@acme/auth": "workspace:*",
     "@acme/db": "workspace:*",
     "@acme/ui": "workspace:*",
-    "@t3-oss/env-nextjs": "^0.13.6",
+    "@t3-oss/env-core": "^0.13.6",
     "@tanstack/react-query": "catalog:",
+    "@tanstack/react-router": "latest",
+    "@tanstack/react-start": "latest",
     "@trpc/client": "catalog:",
     "@trpc/server": "catalog:",
     "@trpc/tanstack-react-query": "catalog:",
-    "next": "^15.3.3",
+    "isbot": "^5.1.22",
     "react": "catalog:react19",
     "react-dom": "catalog:react19",
     "superjson": "2.2.2",
@@ -34,12 +35,13 @@
     "@types/node": "^22.15.29",
     "@types/react": "catalog:react19",
     "@types/react-dom": "catalog:react19",
-    "dotenv-cli": "^8.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
     "eslint": "catalog:",
-    "jiti": "^2.4.2",
     "prettier": "catalog:",
     "tailwindcss": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vite": "latest",
+    "vite-tsconfig-paths": "^5.1.4"
   },
   "prettier": "@acme/config/prettier"
 }
