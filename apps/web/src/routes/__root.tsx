@@ -3,7 +3,6 @@ import {
   HeadContent,
   Outlet,
   Scripts,
-  ScrollRestoration,
 } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 
@@ -45,7 +44,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
-        <ScrollRestoration />
         <Scripts />
       </body>
     </html>
