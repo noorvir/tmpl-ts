@@ -292,6 +292,16 @@
         "zod": "^3.25.49",
       },
     },
+    "packages/utils": {
+      "name": "@acme/utils",
+      "version": "0.1.0",
+      "devDependencies": {
+        "@acme/config": "workspace:*",
+        "eslint": "^9.28.0",
+        "prettier": "^3.5.3",
+        "typescript": "^5.8.3",
+      },
+    },
   },
   "patchedDependencies": {
     "better-auth@1.2.8": "patches/better-auth.patch",
@@ -316,6 +326,8 @@
     "@acme/expo": ["@acme/expo@workspace:apps/mobile"],
 
     "@acme/ui": ["@acme/ui@workspace:packages/ui"],
+
+    "@acme/utils": ["@acme/utils@workspace:packages/utils"],
 
     "@acme/web": ["@acme/web@workspace:apps/web"],
 
