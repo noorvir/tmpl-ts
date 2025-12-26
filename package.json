@@ -24,9 +24,6 @@
     "android": "expo run:android",
     "ios": "expo run:ios"
   },
-  "patchedDependencies": {
-    "better-auth@1.2.8": "patches/better-auth.patch"
-  },
   "devDependencies": {
     "@acme/config": "workspace:*",
     "@ianvs/prettier-plugin-sort-imports": "^4.7.0",

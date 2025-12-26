@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { oAuthProxy } from "better-auth/plugins";
+import { tanstackStartCookies } from "better-auth/tanstack-start";
 
 import { env } from "@acme/config/env";
 
@@ -23,6 +24,7 @@ export const auth = betterAuth({
       productionURL: env.NEXT_PUBLIC_APP_URL,
     }),
     expo(),
+    tanstackStartCookies(), // Must be last plugin for TanStack Start cookie handling
   ],
   socialProviders: {
     github: {

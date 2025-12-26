@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from "./routes/__root"
 import { Route as AboutRouteImport } from "./routes/about"
 import { Route as IndexRouteImport } from "./routes/index"
 import { Route as ApiTrpcSplatRouteImport } from "./routes/api/trpc/$"
+import { Route as ApiAuthSplatRouteImport } from "./routes/api/auth/$"
 
 const AboutRoute = AboutRouteImport.update({
   id: "/about",
@@ -28,34 +29,43 @@ const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
   path: "/api/trpc/$",
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: "/api/auth/$",
+  path: "/api/auth/$",
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute
   "/about": typeof AboutRoute
+  "/api/auth/$": typeof ApiAuthSplatRoute
   "/api/trpc/$": typeof ApiTrpcSplatRoute
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute
   "/about": typeof AboutRoute
+  "/api/auth/$": typeof ApiAuthSplatRoute
   "/api/trpc/$": typeof ApiTrpcSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   "/": typeof IndexRoute
   "/about": typeof AboutRoute
+  "/api/auth/$": typeof ApiAuthSplatRoute
   "/api/trpc/$": typeof ApiTrpcSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: "/" | "/about" | "/api/trpc/$"
+  fullPaths: "/" | "/about" | "/api/auth/$" | "/api/trpc/$"
   fileRoutesByTo: FileRoutesByTo
-  to: "/" | "/about" | "/api/trpc/$"
-  id: "__root__" | "/" | "/about" | "/api/trpc/$"
+  to: "/" | "/about" | "/api/auth/$" | "/api/trpc/$"
+  id: "__root__" | "/" | "/about" | "/api/auth/$" | "/api/trpc/$"
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
 }
 
@@ -82,12 +92,20 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof ApiTrpcSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    "/api/auth/$": {
+      id: "/api/auth/$"
+      path: "/api/auth/$"
+      fullPath: "/api/auth/$"
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiTrpcSplatRoute: ApiTrpcSplatRoute,
 }
 export const routeTree = rootRouteImport

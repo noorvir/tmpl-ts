@@ -64,6 +64,8 @@ export default tseslint.config(
       ],
       // Basic import rules
       "import/consistent-type-specifier-style": ["warn", "prefer-top-level"],
+      // Prevent circular dependencies
+      "import/no-cycle": ["error", { maxDepth: 10 }],
     },
   },
   {

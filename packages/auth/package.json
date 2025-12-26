@@ -10,9 +10,9 @@
   },
   "dependencies": {
     "@acme/db": "workspace:*",
-    "@better-auth/expo": "1.2.8",
+    "@better-auth/expo": "^1.4.9",
     "@prisma/client": "^6.5.0",
-    "better-auth": "1.2.8"
+    "better-auth": "^1.4.9"
   },
   "devDependencies": {
     "@acme/config": "workspace:*",
