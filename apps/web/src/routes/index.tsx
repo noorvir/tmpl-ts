@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { AuthShowcase } from "~/_components/auth-showcase";
 
@@ -30,11 +30,17 @@ function Home() {
         <div className="w-full max-w-2xl">
           <div className="rounded-lg border bg-card p-6 text-center">
             <h2 className="text-2xl font-semibold mb-4">Ready to Build</h2>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground mb-4">
               This is a clean T3 Turbo template with better-auth and Prisma
               ready to go. Start building your application by adding your own
               components and API routes.
             </p>
+            <Link
+              to="/about"
+              className="text-primary underline-offset-4 hover:underline"
+            >
+              Learn more about this project →
+            </Link>
           </div>
         </div>
       </div>
