@@ -6,6 +6,7 @@
   "license": "MIT",
   "exports": {
     ".": "./src/index.ts",
+    "./src/styles/globals.css": "./src/styles/globals.css",
     "./accordion": "./src/components/ui/accordion.tsx",
     "./alert": "./src/components/ui/alert.tsx",
     "./alert-dialog": "./src/components/ui/alert-dialog.tsx",

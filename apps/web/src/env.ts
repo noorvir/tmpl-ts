@@ -29,15 +29,14 @@ export const env = createEnv({
   },
   clientPrefix: "VITE_",
   /**
-   * Destructure all variables from `process.env` to make sure they aren't tree-shaken away.
+   * Use import.meta.env for Vite apps (process.env doesn't exist in browser)
    */
   runtimeEnv: {
-    NODE_ENV: process.env.NODE_ENV,
-    DATABASE_URL: process.env.DATABASE_URL,
-    AUTH_SECRET: process.env.AUTH_SECRET,
-    VERCEL_ENV: process.env.VERCEL_ENV,
-    VERCEL_URL: process.env.VERCEL_URL,
+    NODE_ENV: import.meta.env.MODE,
+    DATABASE_URL: import.meta.env.DATABASE_URL,
+    AUTH_SECRET: import.meta.env.AUTH_SECRET,
+    VERCEL_ENV: import.meta.env.VERCEL_ENV,
+    VERCEL_URL: import.meta.env.VERCEL_URL,
   },
-  skipValidation:
-    !!process.env.CI || process.env.npm_lifecycle_event === "lint",
+  skipValidation: !!import.meta.env.CI,
 });

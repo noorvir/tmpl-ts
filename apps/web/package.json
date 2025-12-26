@@ -32,6 +32,8 @@
   },
   "devDependencies": {
     "@acme/config": "workspace:*",
+    "@tailwindcss/vite": "^4.1.0",
+    "@tanstack/router-plugin": "latest",
     "@types/node": "^22.15.29",
     "@types/react": "catalog:react19",
     "@types/react-dom": "catalog:react19",
