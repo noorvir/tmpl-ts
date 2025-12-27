@@ -7,6 +7,7 @@
     "packages/*"
   ],
   "scripts": {
+    "setup": "bun scripts/setup.ts",
     "build": "turbo run build",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo run clean",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@acme/config": "workspace:*",
+    "@clack/prompts": "^0.11.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
     "@turbo/gen": "^2.5.4",
     "prettier": "^3.5.3",

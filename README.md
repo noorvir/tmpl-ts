@@ -2,6 +2,23 @@
 
 A monorepo template with web, mobile, desktop, and Chrome extension apps.
 
+## Quick Start
+
+```bash
+bun install
+bun run setup
+```
+
+The setup wizard will:
+- Set your project name (replaces `@acme`)
+- Choose which apps to keep
+- Optionally remove authentication
+
+Or run non-interactively:
+```bash
+bun run setup --name myapp --apps web --no-auth
+```
+
 ## Apps
 
 - `apps/web` - TanStack Start web app
@@ -16,13 +33,11 @@ A monorepo template with web, mobile, desktop, and Chrome extension apps.
 - `packages/db` - Prisma database client
 - `packages/ui` - Shared UI components
 
-## Getting Started
+## Development
 
 ```bash
-# Install dependencies
-pnpm install
-
-# Start the web app
-pnpm dev --filter=web
+bun dev          # Start all apps
+bun run build    # Build all packages
+bun run typecheck
 ```
 
