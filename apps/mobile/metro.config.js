@@ -1,47 +1,41 @@
-// Learn more: https://docs.expo.dev/guides/monorepos/
+// Metro config with tailwindcss v3 resolution for NativeWind
 const { getDefaultConfig } = require("expo/metro-config");
-const { FileStore } = require("metro-cache");
 const path = require("node:path");
 
-// Patch module resolution to use local tailwindcss v3 for nativewind
+// Force nativewind to use local tailwindcss v3 before loading it
 const Module = require("module");
 const originalResolveFilename = Module._resolveFilename;
+const localTailwind = path.join(__dirname, "node_modules/tailwindcss");
+
 Module._resolveFilename = function(request, parent, isMain, options) {
-  if (request === "tailwindcss/package.json" && parent?.filename?.includes("nativewind")) {
-    return path.join(__dirname, "node_modules/tailwindcss/package.json");
-  }
   if (request.startsWith("tailwindcss") && parent?.filename?.includes("nativewind")) {
-    const newRequest = path.join(__dirname, "node_modules", request);
-    try {
-      return originalResolveFilename.call(this, newRequest, parent, isMain, options);
-    } catch (e) {
-      // Fall through to original resolution
-    }
+    const subPath = request.replace("tailwindcss", "");
+    return originalResolveFilename.call(this, localTailwind + subPath, parent, isMain, options);
   }
   return originalResolveFilename.call(this, request, parent, isMain, options);
 };
 
 const { withNativeWind } = require("nativewind/metro");
 
-const config = withTurborepoManagedCache(
-  withNativeWind(getDefaultConfig(__dirname), {
-    input: "./src/styles.css",
-    configPath: "./tailwind.config.ts",
-  }),
-);
-module.exports = config;
+const projectRoot = __dirname;
+const monorepoRoot = path.resolve(projectRoot, "../..");
 
-/**
- * Move the Metro cache to the `.cache/metro` folder.
- * If you have any environment variables, you can configure Turborepo to invalidate it when needed.
- *
- * @see https://turborepo.com/docs/reference/configuration#env
- * @param {import('expo/metro-config').MetroConfig} config
- * @returns {import('expo/metro-config').MetroConfig}
- */
-function withTurborepoManagedCache(config) {
-  config.cacheStores = [
-    new FileStore({ root: path.join(__dirname, ".cache/metro") }),
-  ];
-  return config;
-}
+const config = getDefaultConfig(projectRoot);
+
+// Explicit project root configuration
+config.projectRoot = projectRoot;
+config.watchFolders = [monorepoRoot];
+
+// Ensure resolver has correct roots
+config.resolver = {
+  ...config.resolver,
+  nodeModulesPaths: [
+    path.resolve(projectRoot, "node_modules"),
+    path.resolve(monorepoRoot, "node_modules"),
+  ],
+};
+
+module.exports = withNativeWind(config, {
+  input: "./src/styles.css",
+  configPath: "./tailwind.config.ts",
+});

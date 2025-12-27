@@ -1,2 +1,3 @@
 [install]
-linker = "isolated"
+# Using default linker for now (hoisting) - isolated causes Metro issues
+# linker = "isolated"

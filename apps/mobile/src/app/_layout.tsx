@@ -7,8 +7,7 @@ import { queryClient } from "~/utils/api";
 
 import "../styles.css";
 
-// This is the main layout of the app
-// It wraps your pages with the providers they need
+// Main layout wrapping pages with providers
 export default function RootLayout() {
   const { colorScheme } = useColorScheme();
   
