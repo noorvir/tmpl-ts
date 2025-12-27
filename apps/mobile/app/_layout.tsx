@@ -13,6 +13,7 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/components/useColorScheme";
 import { queryClient } from "../src/utils/api";
+import { useTailwind } from "../lib/tw";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -47,6 +48,8 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  // Initialize twrnc with device context (dark mode, screen size)
+  useTailwind();
 
   return (
     <QueryClientProvider client={queryClient}>

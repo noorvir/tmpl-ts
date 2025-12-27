@@ -1,48 +1,25 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-import { useColorScheme } from "@/components/useColorScheme";
-import Colors from "@/constants/Colors";
+import tw from "@/lib/tw";
 
 export default function HomeScreen() {
-  const colorScheme = useColorScheme();
-  const colors = Colors[colorScheme ?? "light"];
-
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: colors.background }]}
-    >
-      <View style={styles.content}>
-        <Text style={[styles.title, { color: colors.text }]}>
-          Welcome to MyApp
+    <SafeAreaView style={tw`flex-1 bg-white dark:bg-black`}>
+      <View style={tw`flex-1 items-center justify-center p-6`}>
+        <Text
+          style={tw`text-3xl font-bold text-center text-black dark:text-white`}
+        >
+          Welcome to MyApp now
         </Text>
-        <Text style={[styles.subtitle, { color: colors.text }]}>
+        <Text
+          style={tw`text-base mt-3 text-center text-gray-600 dark:text-gray-400`}
+        >
           A fresh Expo app with tRPC integration
         </Text>
+        <View style={tw`mt-8 p-4 rounded-2xl bg-primary/10`}>
+          <Text style={tw`text-primary text-center`}>Styled with twrnc</Text>
+        </View>
       </View>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 24,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  subtitle: {
-    fontSize: 16,
-    marginTop: 12,
-    textAlign: "center",
-    opacity: 0.7,
-  },
-});

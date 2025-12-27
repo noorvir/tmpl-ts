@@ -1,23 +1,12 @@
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Location from "expo-location";
-
-import { useColorScheme } from "@/components/useColorScheme";
-import Colors from "@/constants/Colors";
+import tw from "@/lib/tw";
 
 export default function LocationScreen() {
-  const colorScheme = useColorScheme();
-  const colors = Colors[colorScheme ?? "light"];
-
   const [location, setLocation] = useState<Location.LocationObject | null>(
-    null
+    null,
   );
   const [address, setAddress] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -45,7 +34,7 @@ export default function LocationScreen() {
 
     if (geocoded) {
       const parts = [geocoded.city, geocoded.region, geocoded.country].filter(
-        Boolean
+        Boolean,
       );
       setAddress(parts.join(", "));
     }
@@ -54,41 +43,46 @@ export default function LocationScreen() {
   };
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: colors.background }]}
-    >
-      <View style={styles.content}>
-        <Text style={[styles.title, { color: colors.text }]}>Location</Text>
+    <SafeAreaView style={tw`flex-1 bg-white dark:bg-black`}>
+      <View style={tw`flex-1 items-center justify-center p-6`}>
+        <Text style={tw`text-2xl font-bold mb-6 text-black dark:text-white`}>
+          Location
+        </Text>
 
         {error && (
-          <View style={styles.errorBox}>
-            <Text style={styles.errorText}>{error}</Text>
+          <View
+            style={tw`bg-red-100 dark:bg-red-900/30 p-4 rounded-xl mb-4 w-full`}
+          >
+            <Text style={tw`text-red-700 dark:text-red-400 text-center`}>
+              {error}
+            </Text>
           </View>
         )}
 
         {location && (
           <View
-            style={[
-              styles.infoCard,
-              { backgroundColor: colorScheme === "dark" ? "#1c1c1e" : "#f2f2f7" },
-            ]}
+            style={tw`bg-gray-100 dark:bg-gray-800 p-5 rounded-2xl w-full mb-6`}
           >
-            <Text style={[styles.label, { color: colors.text }]}>
+            <Text
+              style={tw`text-sm font-semibold opacity-60 mb-1 text-black dark:text-white`}
+            >
               Coordinates
             </Text>
-            <Text style={[styles.value, { color: colors.text }]}>
+            <Text style={tw`text-base font-mono text-black dark:text-white`}>
               Lat: {location.coords.latitude.toFixed(6)}
             </Text>
-            <Text style={[styles.value, { color: colors.text }]}>
+            <Text style={tw`text-base font-mono text-black dark:text-white`}>
               Lng: {location.coords.longitude.toFixed(6)}
             </Text>
 
             {address && (
               <>
-                <Text style={[styles.label, { color: colors.text, marginTop: 16 }]}>
+                <Text
+                  style={tw`text-sm font-semibold opacity-60 mb-1 mt-4 text-black dark:text-white`}
+                >
                   Address
                 </Text>
-                <Text style={[styles.value, { color: colors.text }]}>
+                <Text style={tw`text-base text-black dark:text-white`}>
                   {address}
                 </Text>
               </>
@@ -99,15 +93,17 @@ export default function LocationScreen() {
         <Pressable
           onPress={getLocation}
           disabled={loading}
-          style={({ pressed }) => [
-            styles.button,
-            { opacity: pressed || loading ? 0.7 : 1 },
-          ]}
+          style={({ pressed }) =>
+            tw.style(
+              `bg-blue-500 py-4 px-8 rounded-xl min-w-[200px] items-center`,
+              (pressed || loading) && `opacity-70`,
+            )
+          }
         >
           {loading ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.buttonText}>
+            <Text style={tw`text-white text-lg font-semibold`}>
               {location ? "Update Location" : "Get Location"}
             </Text>
           )}
@@ -116,61 +112,3 @@ export default function LocationScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 24,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 24,
-  },
-  errorBox: {
-    backgroundColor: "#ffebee",
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 16,
-    width: "100%",
-  },
-  errorText: {
-    color: "#c62828",
-    textAlign: "center",
-  },
-  infoCard: {
-    padding: 20,
-    borderRadius: 16,
-    width: "100%",
-    marginBottom: 24,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: "600",
-    marginBottom: 4,
-    opacity: 0.6,
-  },
-  value: {
-    fontSize: 16,
-    fontFamily: "SpaceMono",
-  },
-  button: {
-    backgroundColor: "#007AFF",
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    borderRadius: 12,
-    minWidth: 200,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 17,
-    fontWeight: "600",
-  },
-});
-
