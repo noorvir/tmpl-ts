@@ -4,45 +4,42 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: "MyApp",
   slug: "myapp",
-  scheme: "myapp",
-  version: "0.1.0",
+  version: "1.0.0",
   orientation: "portrait",
-  icon: "./assets/icon-light.png",
+  icon: "./assets/images/icon.png",
+  scheme: "myapp",
   userInterfaceStyle: "automatic",
-  updates: {
-    fallbackToCacheTimeout: 0,
-  },
   newArchEnabled: true,
-  assetBundlePatterns: ["**/*"],
+  splash: {
+    image: "./assets/images/splash-icon.png",
+    resizeMode: "contain",
+    backgroundColor: "#ffffff",
+  },
   ios: {
-    bundleIdentifier: "com.yourcompany.myapp",
     supportsTablet: true,
-    icon: {
-      light: "./assets/icon-light.png",
-      dark: "./assets/icon-dark.png",
-    },
+    bundleIdentifier: "com.yourcompany.myapp",
     infoPlist: {
       NSLocationWhenInUseUsageDescription:
         "This app needs location access to show your current position.",
     },
   },
   android: {
-    package: "com.yourcompany.myapp",
     adaptiveIcon: {
-      foregroundImage: "./assets/icon-light.png",
-      backgroundColor: "#1F104A",
+      foregroundImage: "./assets/images/adaptive-icon.png",
+      backgroundColor: "#ffffff",
     },
     edgeToEdgeEnabled: true,
+    package: "com.yourcompany.myapp",
     permissions: ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"],
   },
-  experiments: {
-    tsconfigPaths: true,
-    typedRoutes: true,
+  web: {
+    bundler: "metro",
+    output: "static",
+    favicon: "./assets/images/favicon.png",
   },
   plugins: [
     "expo-router",
     "expo-secure-store",
-    "expo-web-browser",
     [
       "expo-location",
       {
@@ -50,16 +47,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           "This app needs location access to show your current position.",
       },
     ],
-    [
-      "expo-splash-screen",
-      {
-        backgroundColor: "#E4E4E7",
-        image: "./assets/icon-light.png",
-        dark: {
-          backgroundColor: "#18181B",
-          image: "./assets/icon-dark.png",
-        },
-      },
-    ],
   ],
+  experiments: {
+    typedRoutes: true,
+  },
 });
+

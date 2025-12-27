@@ -1,14 +1,6 @@
 # Mobile App (Expo)
 
-A React Native mobile app built with Expo, featuring tRPC backend integration and NativeWind styling.
-
-## Features
-
-- 📱 **Cross-platform** - iOS and Android from a single codebase
-- 🔐 **Authentication** - Secure auth with better-auth
-- 📡 **tRPC** - Type-safe API communication with the backend
-- 🎨 **NativeWind** - Tailwind CSS for styling (v4 in monorepo, v3 for mobile)
-- 📍 **Location** - GPS location access with expo-location
+React Native app with Expo, tRPC integration, and native styling.
 
 ## Quick Start
 
@@ -16,40 +8,34 @@ A React Native mobile app built with Expo, featuring tRPC backend integration an
 # From monorepo root
 bun install
 
-# Start backend (in one terminal)
+# Start backend
 cd apps/web && bun dev
 
-# Start mobile (in another terminal)
-cd apps/mobile && npx expo start --go --ios
+# Start mobile
+cd apps/mobile && npx expo start
 ```
 
-## Development Notes
+Then:
+- Press `i` to open iOS simulator
+- Press `a` to open Android emulator
+- Scan QR code with Expo Go on your phone
 
-### NativeWind + Tailwind Version
+## Features
 
-The monorepo uses Tailwind CSS v4, but NativeWind requires v3. The `metro.config.js` includes a module resolution patch to handle this:
+- **Home** - Welcome screen
+- **Location** - GPS location with reverse geocoding
 
-```js
-// Forces nativewind to use local tailwindcss v3
-Module._resolveFilename = function(request, parent, isMain, options) {
-  if (request.startsWith("tailwindcss") && parent?.filename?.includes("nativewind")) {
-    // Resolve from local node_modules
-  }
-  // ...
-};
-```
-
-### Commands
+## Development
 
 | Command | Description |
 |---------|-------------|
-| `npx expo start --go` | Start with Expo Go |
+| `npx expo start` | Start dev server |
 | `npx expo start --clear` | Clear cache and start |
 | `npx expo prebuild` | Generate native projects |
-| `npx expo run:ios` | Run on iOS (requires prebuild) |
+| `npx expo run:ios` | Build and run on iOS |
 
-### Troubleshooting
+## Notes
 
-- **Metro issues**: `npx expo start --clear`
-- **Clean rebuild**: `bun run clean && bun install`
-- **Location not working**: Need development build (`npx expo prebuild && npx expo run:ios`)
+- Uses React Native StyleSheet for styling (native look)
+- tRPC client configured in `src/utils/api.ts`
+- Location requires development build for full functionality in simulator
