@@ -17,12 +17,31 @@ next-env.d.ts
 .nitro/
 .output/
 
-# expo
+# expo / react native
 .expo/
 expo-env.d.ts
-apps/expo/.gitignore
-apps/expo/ios
-apps/expo/android
+
+# Generated native projects (regenerated via `npx expo prebuild`)
+apps/mobile/ios/
+apps/mobile/android/
+apps/expo/ios/
+apps/expo/android/
+
+# Expo build artifacts
+*.ipa
+*.apk
+*.aab
+
+# CocoaPods (if you ever need to commit ios/, these would still be ignored)
+Pods/
+*.xcworkspace
+!*.xcworkspace/contents.xcworkspacedata
+*.xcuserdata/
+
+# Android build
+*.keystore
+!debug.keystore
+.gradle/
 
 # production
 build
@@ -50,3 +69,30 @@ dist/
 
 # turbo
 .turbo
+
+# Metro bundler
+.metro-health-check*
+
+# Xcode
+DerivedData/
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Bundle artifacts
+*.jsbundle
+
+# Temporary files
+*.log
+*.tmp
+*.temp

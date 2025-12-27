@@ -1,3 +1,2 @@
 [install]
-# Use isolated mode for workspaces - each workspace gets its own node_modules
-isolated = true
+linker = "isolated"
