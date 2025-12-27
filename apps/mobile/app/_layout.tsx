@@ -11,7 +11,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 
-import { useColorScheme } from "@/components/useColorScheme";
+import { useColorScheme } from "@/components/use-color-scheme";
 import { queryClient } from "../src/utils/api";
 import { useTailwind } from "../lib/tw";
 

@@ -1,11 +1,11 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
-import { ExternalLink } from './ExternalLink';
-import { MonoText } from './StyledText';
-import { Text, View } from './Themed';
+import { ExternalLink } from './external-link';
+import { MonoText } from './styled-text';
+import { Text, View } from './themed';
 
-import Colors from '@/constants/Colors';
+import Colors from '@/constants/colors';
 
 export default function EditScreenInfo({ path }: { path: string }) {
   return (
@@ -75,3 +75,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
