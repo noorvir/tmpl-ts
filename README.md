@@ -1,6 +1,6 @@
 # Noorvir's Typescript Monorepo Template
 
-A monorepo template with web, mobile, desktop, and Chrome extension apps.
+A monorepo template with web, mobile, desktop, Chrome extension, and Python apps.
 
 ## Quick Start
 
@@ -16,7 +16,7 @@ The setup wizard will:
 
 Or run non-interactively:
 ```bash
-bun run setup --name myapp --apps web --no-auth
+bun run setup --name myapp --apps web,pyapp --no-auth
 ```
 
 ## Apps
@@ -25,6 +25,7 @@ bun run setup --name myapp --apps web --no-auth
 - `apps/mobile` - Expo React Native app
 - `apps/desktop` - Electron desktop app
 - `apps/chrome` - Chrome extension
+- `apps/pyapp` - Python app with FastAPI and Marimo notebooks (managed by UV)
 
 ## Packages
 
@@ -39,5 +40,16 @@ bun run setup --name myapp --apps web --no-auth
 bun dev          # Start all apps
 bun run build    # Build all packages
 bun run typecheck
+```
+
+### Python App
+
+The Python app uses [UV](https://docs.astral.sh/uv/) for dependency management:
+
+```bash
+cd apps/pyapp
+uv sync                                    # Install dependencies
+uv run python server.py                    # Start FastAPI server
+uv run marimo edit notebooks/example.py   # Open Marimo notebook
 ```
 
