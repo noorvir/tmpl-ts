@@ -14,6 +14,8 @@
  *   --apps, -a     Comma-separated list of apps to keep (web,mobile,desktop,chrome,pyapp)
  *   --auth         Include authentication (default: true)
  *   --no-auth      Exclude authentication
+ *   --reinit-git   Reinitialize git repository (deletes .git and runs git init)
+ *   --no-reinit-git Skip git reinitialization
  *   --keep-script  Don't remove setup script after running
  *   --help, -h     Show help
  */
@@ -30,6 +32,7 @@ function parseArgs(): {
   name?: string;
   apps?: AppName[];
   auth?: boolean;
+  reinitGit?: boolean;
   keepScript?: boolean;
   help?: boolean;
 } {
@@ -54,6 +57,10 @@ function parseArgs(): {
       result.auth = true;
     } else if (arg === "--no-auth") {
       result.auth = false;
+    } else if (arg === "--reinit-git") {
+      result.reinitGit = true;
+    } else if (arg === "--no-reinit-git") {
+      result.reinitGit = false;
     } else if (arg === "--keep-script") {
       result.keepScript = true;
     }
@@ -76,6 +83,8 @@ Options:
   --apps, -a     Comma-separated list of apps to keep (web,mobile,desktop,chrome,pyapp)
   --auth         Include authentication (default: true)
   --no-auth      Exclude authentication
+  --reinit-git   Reinitialize git repository (deletes .git and runs git init)
+  --no-reinit-git Skip git reinitialization
   --keep-script  Don't remove setup script after running
   --help, -h     Show help
 
@@ -635,6 +644,23 @@ export const env = createEnv({
   return changes;
 }
 
+// Reinitialize git repository
+function reinitializeGit(): boolean {
+  const gitDir = path.join(ROOT_DIR, ".git");
+  if (fs.existsSync(gitDir)) {
+    fs.rmSync(gitDir, { recursive: true, force: true });
+  }
+
+  // Run git init
+  const { execSync } = require("child_process");
+  try {
+    execSync("git init", { cwd: ROOT_DIR, stdio: "pipe" });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 // Remove template-specific cursor rules
 function removeTemplateRules(): boolean {
   const templateRulePath = path.join(
@@ -650,21 +676,32 @@ function removeTemplateRules(): boolean {
   return false;
 }
 
-// Self-destruct: remove the setup script after running
+// Self-destruct: remove the setup script and related files after running
 function removeSetupScript(): boolean {
-  const scriptPath = path.join(ROOT_DIR, "scripts", "setup.ts");
+  const scriptsDir = path.join(ROOT_DIR, "scripts");
+  const scriptPath = path.join(scriptsDir, "setup.ts");
+  const testScriptPath = path.join(scriptsDir, "test-setup.sh");
+
+  let removed = false;
+
   if (fs.existsSync(scriptPath)) {
     fs.unlinkSync(scriptPath);
-
-    // Remove scripts directory if empty
-    try {
-      fs.rmdirSync(path.join(ROOT_DIR, "scripts"));
-    } catch {
-      // Not empty
-    }
-    return true;
+    removed = true;
   }
-  return false;
+
+  if (fs.existsSync(testScriptPath)) {
+    fs.unlinkSync(testScriptPath);
+    removed = true;
+  }
+
+  // Remove scripts directory if empty
+  try {
+    fs.rmdirSync(scriptsDir);
+  } catch {
+    // Not empty
+  }
+
+  return removed;
 }
 
 // Main function
@@ -740,7 +777,30 @@ async function main() {
     keepAuth = authResult;
   }
 
-  // 4. Confirm removal of setup script
+  // 4. Ask about git reinitialization (requires explicit "yes" confirmation)
+  let reinitGit = args.reinitGit ?? false;
+  if (args.reinitGit === undefined && args.name === undefined) {
+    // Only ask in interactive mode
+    const reinitResult = await p.text({
+      message:
+        'Reinitialize git repository? This will DELETE your .git folder. Type "yes" to confirm:',
+      placeholder: "no",
+      validate: (value) => {
+        const lower = value.toLowerCase().trim();
+        if (lower !== "yes" && lower !== "no" && lower !== "") {
+          return 'Please type "yes" to confirm or "no" (or leave empty) to skip';
+        }
+      },
+    });
+
+    if (p.isCancel(reinitResult)) {
+      p.cancel("Setup cancelled");
+      process.exit(0);
+    }
+    reinitGit = reinitResult.toLowerCase().trim() === "yes";
+  }
+
+  // 5. Confirm removal of setup script
   let removeScript = !args.keepScript;
   if (!args.keepScript && args.name === undefined) {
     // Only ask in interactive mode
@@ -762,6 +822,7 @@ async function main() {
       `Project name: @${projectName}`,
       `Apps to keep: ${appsToKeep.join(", ")}`,
       `Authentication: ${keepAuth ? "Yes" : "No"}`,
+      `Reinitialize git: ${reinitGit ? "Yes" : "No"}`,
       `Remove setup script: ${removeScript ? "Yes" : "No"}`,
     ].join("\n"),
     "Summary",
@@ -803,6 +864,16 @@ async function main() {
     spinner.start("Stubbing authentication");
     const authChanges = stubAuth();
     spinner.stop(`Auth stubbed (${authChanges.length} changes)`);
+  }
+
+  if (reinitGit) {
+    spinner.start("Reinitializing git repository");
+    const success = reinitializeGit();
+    if (success) {
+      spinner.stop("Git repository reinitialized");
+    } else {
+      spinner.stop("Failed to reinitialize git repository");
+    }
   }
 
   if (removeScript) {
