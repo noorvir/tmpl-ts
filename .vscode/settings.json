@@ -1,4 +1,5 @@
 {
+  "python.defaultInterpreterPath": "${workspaceFolder}/apps/pyapp/.venv/bin/python",
   "eslint.workingDirectories": [
     {
       "mode": "auto"
