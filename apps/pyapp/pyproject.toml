@@ -1,0 +1,11 @@
+[project]
+name = "pyapp"
+version = "0.1.0"
+description = "Python app with FastAPI and Marimo notebooks"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.127.1",
+    "marimo>=0.18.4",
+    "uvicorn>=0.40.0",
+]

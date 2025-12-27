@@ -11,7 +11,7 @@
  *
  * Options:
  *   --name, -n     Project name (replaces @acme)
- *   --apps, -a     Comma-separated list of apps to keep (web,mobile,desktop,chrome)
+ *   --apps, -a     Comma-separated list of apps to keep (web,mobile,desktop,chrome,pyapp)
  *   --auth         Include authentication (default: true)
  *   --no-auth      Exclude authentication
  *   --keep-script  Don't remove setup script after running
@@ -22,7 +22,7 @@ import * as path from "path";
 import * as p from "@clack/prompts";
 
 const ROOT_DIR = path.resolve(import.meta.dirname, "..");
-const ALL_APPS = ["web", "mobile", "desktop", "chrome"] as const;
+const ALL_APPS = ["web", "mobile", "desktop", "chrome", "pyapp"] as const;
 type AppName = (typeof ALL_APPS)[number];
 
 // Parse command line arguments
@@ -73,7 +73,7 @@ Usage:
 
 Options:
   --name, -n     Project name (replaces @acme)
-  --apps, -a     Comma-separated list of apps to keep (web,mobile,desktop,chrome)
+  --apps, -a     Comma-separated list of apps to keep (web,mobile,desktop,chrome,pyapp)
   --auth         Include authentication (default: true)
   --no-auth      Exclude authentication
   --keep-script  Don't remove setup script after running
