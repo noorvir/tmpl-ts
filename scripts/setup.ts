@@ -587,7 +587,37 @@ export const env = createEnv({
     changes.push("Updated root package.json");
   }
 
-  // 11. Delete better-auth.patch if it exists
+  // 11. If mobile app exists, remove auth-related dependencies
+  const mobileAppDir = path.join(ROOT_DIR, "apps", "mobile");
+  if (fs.existsSync(mobileAppDir)) {
+    const mobilePkgPath = path.join(mobileAppDir, "package.json");
+    if (fs.existsSync(mobilePkgPath)) {
+      const pkg = JSON.parse(fs.readFileSync(mobilePkgPath, "utf-8"));
+      let changed = false;
+      if (pkg.dependencies) {
+        if (pkg.dependencies["@better-auth/expo"]) {
+          delete pkg.dependencies["@better-auth/expo"];
+          changed = true;
+        }
+        if (pkg.dependencies["better-auth"]) {
+          delete pkg.dependencies["better-auth"];
+          changed = true;
+        }
+      }
+      if (changed) {
+        fs.writeFileSync(
+          mobilePkgPath,
+          JSON.stringify(pkg, null, 2) + "\n",
+          "utf-8",
+        );
+        changes.push(
+          "Updated apps/mobile/package.json (removed auth dependencies)",
+        );
+      }
+    }
+  }
+
+  // 12. Delete better-auth.patch if it exists
   const patchPath = path.join(ROOT_DIR, "patches", "better-auth.patch");
   if (fs.existsSync(patchPath)) {
     fs.unlinkSync(patchPath);
