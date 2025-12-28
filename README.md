@@ -31,6 +31,7 @@ bun run setup --name myapp --apps web,pyapp --no-auth
 
 - `packages/api` - tRPC API router
 - `packages/auth` - better-auth authentication
+- `packages/clients` - Generated OpenAPI clients (TypeScript + React Query)
 - `packages/db` - Prisma database client
 - `packages/ui` - Shared UI components
 
@@ -51,5 +52,26 @@ cd apps/pyapp
 uv sync                                    # Install dependencies
 uv run python server.py                    # Start FastAPI server
 uv run marimo edit notebooks/example.py   # Open Marimo notebook
+```
+
+### API Clients
+
+Generate TypeScript clients from OpenAPI specs:
+
+```bash
+bun run clients:codegen   # Regenerate all clients
+bun run clients:add       # Add a new client (interactive)
+```
+
+Usage:
+
+```typescript
+import { pyapp, pyappQueries } from "@acme/clients";
+
+// SDK
+await pyapp.healthCheck();
+
+// React Query
+const { data } = useQuery(pyappQueries.healthCheckOptions());
 ```
 
