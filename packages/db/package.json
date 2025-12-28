@@ -14,15 +14,18 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@prisma/client": "^6.5.0",
+    "@prisma/adapter-pg": "^7.0.0",
+    "@prisma/client": "^7.0.0",
+    "pg": "^8.16.0",
     "zod": "^4.0.0"
   },
   "devDependencies": {
     "@acme/config": "workspace:*",
+    "@types/pg": "^8.15.4",
     "dotenv-cli": "^8.0.0",
     "eslint": "^9.28.0",
     "prettier": "^3.5.3",
-    "prisma": "^6.5.0",
+    "prisma": "^7.0.0",
     "typescript": "^5.8.3"
   },
   "prettier": "@acme/config/prettier"
