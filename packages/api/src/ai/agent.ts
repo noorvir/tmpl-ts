@@ -13,8 +13,8 @@
  */
 
 import { generateText, tool } from "ai";
-import { openai } from "@ai-sdk/openai";
-import { z } from "zod/v4";
+import { anthropic } from "@ai-sdk/anthropic";
+import { z } from "zod/v3";
 
 // --- Tools ---
 
@@ -23,7 +23,9 @@ import { z } from "zod/v4";
  */
 const getCurrentTime = tool({
   description: "Get the current time in ISO format",
-  parameters: z.object({}),
+  parameters: z.object({
+    timezone: z.string().optional().describe("Optional timezone (defaults to UTC)"),
+  }),
   execute: async () => {
     return new Date().toISOString();
   },
@@ -81,11 +83,11 @@ export interface AgentResult {
  * @param userMessage - The user's input message
  * @returns The agent's response and any tool calls made
  */
-export async function runAgent(userMessage: string): Promise<AgentResult> {
+export async function runAgent(userMessage: string, maxSteps = 3): Promise<AgentResult> {
   const { text, toolCalls, toolResults } = await generateText({
-    model: openai("gpt-4o-mini"),
+    model: anthropic("claude-sonnet-4-20250514"),
     tools,
-    maxSteps: 5, // Allow up to 5 tool calls
+    maxSteps,
     system: `You are a helpful assistant. Use the available tools when needed to answer questions accurately.`,
     prompt: userMessage,
   });

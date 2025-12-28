@@ -19,10 +19,10 @@
 
 import { StateGraph, START, END, Annotation } from "@langchain/langgraph";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
-import { ChatOpenAI } from "@langchain/openai";
+import { ChatAnthropic } from "@langchain/anthropic";
 import { BaseMessage, HumanMessage, AIMessage } from "@langchain/core/messages";
 import { tool } from "@langchain/core/tools";
-import { z } from "zod/v4";
+import { z } from "zod/v3";
 
 // --- State Definition ---
 
@@ -51,7 +51,9 @@ const getCurrentTime = tool(
   {
     name: "getCurrentTime",
     description: "Get the current time in ISO format",
-    schema: z.object({}),
+    schema: z.object({
+      timezone: z.string().optional().describe("Optional timezone (defaults to UTC)"),
+    }),
   }
 );
 
@@ -89,7 +91,7 @@ const tools = [getCurrentTime, calculate];
  * Create the agent node that calls the LLM.
  * The LLM will decide whether to use tools or provide a final answer.
  */
-function createAgentNode(llm: ChatOpenAI) {
+function createAgentNode(llm: ChatAnthropic) {
   const llmWithTools = llm.bindTools(tools);
 
   return async (state: AgentStateType): Promise<Partial<AgentStateType>> => {
@@ -128,8 +130,8 @@ function shouldContinue(state: AgentStateType): "tools" | typeof END {
  *                  └-> END (if no tool calls)
  */
 export function createAgentGraph() {
-  const llm = new ChatOpenAI({
-    model: "gpt-4o-mini",
+  const llm = new ChatAnthropic({
+    model: "claude-sonnet-4-20250514",
     temperature: 0,
   });
 

@@ -13,7 +13,7 @@ Environment:
 
 from typing import Annotated
 
-from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
@@ -65,7 +65,7 @@ tools = [get_current_time, calculate]
 # --- Agent Node ---
 
 
-def create_agent_node(llm: ChatOpenAI):
+def create_agent_node(llm: ChatAnthropic):
     """Create the agent node that calls the LLM."""
     llm_with_tools = llm.bind_tools(tools)
 
@@ -88,7 +88,7 @@ def create_agent_graph() -> StateGraph:
     START -> agent -> (tools_condition) -> tools -> agent -> ... -> END
     """
     # Initialize the LLM
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatAnthropic(model="claude-sonnet-4-20250514", temperature=0)
 
     # Create the graph
     graph = StateGraph(AgentState)
