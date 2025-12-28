@@ -1,4 +1,4 @@
-# Noorvir's Typescript Monorepo Template
+# Monorepo Template
 
 A monorepo template with web, mobile, desktop, Chrome extension, and Python apps.
 
