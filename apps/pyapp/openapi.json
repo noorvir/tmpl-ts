@@ -9,7 +9,7 @@
     "/": {
       "get": {
         "summary": "Root",
-        "operationId": "root__get",
+        "operationId": "root",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -25,7 +25,7 @@
     "/health": {
       "get": {
         "summary": "Health",
-        "operationId": "health_health_get",
+        "operationId": "healthCheck",
         "responses": {
           "200": {
             "description": "Successful Response",

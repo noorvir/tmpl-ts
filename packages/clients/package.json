@@ -15,7 +15,8 @@
     }
   },
   "scripts": {
-    "codegen": "openapi-ts -i ../../apps/pyapp/openapi.json -o ./src/pyapp -c @hey-api/client-fetch -p @tanstack/react-query",
+    "codegen": "bun run codegen:pyapp",
+    "codegen:pyapp": "openapi-ts -i ../../apps/pyapp/openapi.json -o ./src/pyapp -c @hey-api/client-fetch -p @tanstack/react-query",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",

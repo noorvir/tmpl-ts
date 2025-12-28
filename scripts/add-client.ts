@@ -15,9 +15,9 @@
  *   --type, -t     Client type: sdk, react-query, or both (default: both)
  *   --help, -h     Show help
  */
+import { execSync } from "child_process";
 import * as fs from "fs";
 import * as path from "path";
-import { execSync } from "child_process";
 import * as p from "@clack/prompts";
 
 const ROOT_DIR = path.resolve(import.meta.dirname, "..");
@@ -135,6 +135,7 @@ function generateClient(config: ClientConfig): void {
 
 function updatePackageJson(config: ClientConfig): void {
   const { name, type } = config;
+  const relativeSpec = getRelativeSpecPath(config.spec);
   const pkgPath = path.join(CLIENTS_DIR, "package.json");
   const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf-8"));
 
@@ -147,6 +148,23 @@ function updatePackageJson(config: ClientConfig): void {
       default: `./src/${name}/@tanstack/react-query.gen.ts`,
     };
   }
+
+  // Add codegen script for this client
+  pkg.scripts = pkg.scripts || {};
+  const plugins: string[] = [];
+  if (type === "react-query" || type === "both") {
+    plugins.push("@tanstack/react-query");
+  }
+  const pluginArg = plugins.length > 0 ? ` -p ${plugins.join(" ")}` : "";
+  pkg.scripts[`codegen:${name}`] =
+    `openapi-ts -i ${relativeSpec} -o ./src/${name} -c @hey-api/client-fetch${pluginArg}`;
+
+  // Update main codegen script to include this client
+  const codegenScripts = Object.keys(pkg.scripts)
+    .filter((s) => s.startsWith("codegen:"))
+    .map((s) => `bun run ${s}`)
+    .join(" && ");
+  pkg.scripts.codegen = codegenScripts;
 
   fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n", "utf-8");
 }
@@ -315,4 +333,3 @@ main().catch((error) => {
   p.cancel(`Failed: ${error.message}`);
   process.exit(1);
 });
-

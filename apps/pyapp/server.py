@@ -28,12 +28,12 @@ async def dump_openapi_spec():
     print(f"OpenAPI spec written to {spec_path}")
 
 
-@app.get("/")
+@app.get("/", operation_id="root")
 async def root():
     return {"message": "Hello from PyApp!"}
 
 
-@app.get("/health")
+@app.get("/health", operation_id="healthCheck")
 async def health():
     return {"status": "healthy"}
 
