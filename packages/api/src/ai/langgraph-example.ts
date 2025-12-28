@@ -17,12 +17,12 @@
  *   OPENAI_API_KEY: Required for the OpenAI LLM
  */
 
-import { StateGraph, START, END, Annotation } from "@langchain/langgraph";
-import { ToolNode } from "@langchain/langgraph/prebuilt";
 import { ChatAnthropic } from "@langchain/anthropic";
-import { BaseMessage, HumanMessage, AIMessage } from "@langchain/core/messages";
+import { AIMessage, BaseMessage, HumanMessage } from "@langchain/core/messages";
 import { tool } from "@langchain/core/tools";
-import { z } from "zod/v3";
+import { Annotation, END, START, StateGraph } from "@langchain/langgraph";
+import { ToolNode } from "@langchain/langgraph/prebuilt";
+import { z } from "zod/v4";
 
 // --- State Definition ---
 
@@ -52,9 +52,12 @@ const getCurrentTime = tool(
     name: "getCurrentTime",
     description: "Get the current time in ISO format",
     schema: z.object({
-      timezone: z.string().optional().describe("Optional timezone (defaults to UTC)"),
+      timezone: z
+        .string()
+        .optional()
+        .describe("Optional timezone (defaults to UTC)"),
     }),
-  }
+  },
 );
 
 /**
@@ -78,9 +81,11 @@ const calculate = tool(
     name: "calculate",
     description: "Evaluate a simple mathematical expression",
     schema: z.object({
-      expression: z.string().describe("The mathematical expression to evaluate"),
+      expression: z
+        .string()
+        .describe("The mathematical expression to evaluate"),
     }),
-  }
+  },
 );
 
 const tools = [getCurrentTime, calculate];
@@ -106,7 +111,7 @@ function createAgentNode(llm: ChatAnthropic) {
  */
 function shouldContinue(state: AgentStateType): "tools" | typeof END {
   const lastMessage = state.messages[state.messages.length - 1];
-  
+
   // Check if the message has tool calls
   if (
     lastMessage &&
@@ -116,7 +121,7 @@ function shouldContinue(state: AgentStateType): "tools" | typeof END {
   ) {
     return "tools";
   }
-  
+
   return END;
 }
 
@@ -166,9 +171,10 @@ export async function runAgent(userMessage: string): Promise<AgentResult> {
   });
 
   const lastMessage = result.messages[result.messages.length - 1];
-  const response = lastMessage instanceof AIMessage 
-    ? (lastMessage.content as string)
-    : String(lastMessage.content);
+  const response =
+    lastMessage instanceof AIMessage
+      ? (lastMessage.content as string)
+      : String(lastMessage.content);
 
   return {
     response,
@@ -225,4 +231,3 @@ export async function example(): Promise<void> {
  * The LLM reasons about what to do, acts by calling tools,
  * observes the results, and continues until it can answer.
  */
-

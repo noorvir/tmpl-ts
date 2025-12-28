@@ -6,7 +6,7 @@ using LangGraph with tool calling capabilities.
 
 Usage:
     python ai.py
-    
+
 Environment:
     OPENAI_API_KEY: Required for the OpenAI LLM
 """
@@ -14,11 +14,10 @@ Environment:
 from typing import Annotated
 
 from langchain_anthropic import ChatAnthropic
-from langgraph.graph import StateGraph, START, END
+from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
 from typing_extensions import TypedDict
-
 
 # --- State Definition ---
 
@@ -137,4 +136,3 @@ if __name__ == "__main__":
     # Test with a calculation
     response = run_agent("What is 42 * 17 + 123?")
     print(f"Q: What is 42 * 17 + 123?\nA: {response}\n")
-

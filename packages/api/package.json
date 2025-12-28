@@ -16,17 +16,19 @@
     "dev": "tsc",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
     "@acme/auth": "workspace:*",
     "@acme/clients": "workspace:*",
     "@acme/db": "workspace:*",
-    "@ai-sdk/anthropic": "^1.2.0",
+    "@ai-sdk/anthropic": "^3.0.0",
     "@langchain/anthropic": "^0.3.0",
     "@langchain/langgraph": "^0.2.0",
     "@trpc/server": "^11.2.0",
-    "ai": "^4.3.0",
+    "ai": "^6.0.0",
     "superjson": "2.2.2",
     "zod": "^4.0.0"
   },
@@ -34,7 +36,8 @@
     "@acme/config": "workspace:*",
     "eslint": "^9.28.0",
     "prettier": "^3.5.3",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^3.0.0"
   },
   "prettier": "@acme/config/prettier"
 }

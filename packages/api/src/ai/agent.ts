@@ -1,20 +1,22 @@
 /**
- * Minimal Vercel AI SDK Agent Example
+ * Minimal AI SDK Agent Example
  *
  * This module demonstrates a clean, minimal implementation of an AI agent
- * using the Vercel AI SDK with tool calling capabilities.
+ * using the AI SDK v6 with tool calling capabilities.
  *
  * Usage:
  *   import { runAgent } from './ai/agent';
  *   const response = await runAgent("What time is it?");
  *
  * Environment:
- *   OPENAI_API_KEY: Required for the OpenAI provider
+ *   ANTHROPIC_API_KEY: Required for the Anthropic provider
+ *
+ * @see https://ai-sdk.dev/docs/reference/ai-sdk-core/tool
  */
 
-import { generateText, tool } from "ai";
 import { anthropic } from "@ai-sdk/anthropic";
-import { z } from "zod/v3";
+import { generateText, tool } from "ai";
+import { z } from "zod";
 
 // --- Tools ---
 
@@ -23,8 +25,11 @@ import { z } from "zod/v3";
  */
 const getCurrentTime = tool({
   description: "Get the current time in ISO format",
-  parameters: z.object({
-    timezone: z.string().optional().describe("Optional timezone (defaults to UTC)"),
+  inputSchema: z.object({
+    timezone: z
+      .string()
+      .optional()
+      .describe("Optional timezone (defaults to UTC)"),
   }),
   execute: async () => {
     return new Date().toISOString();
@@ -35,8 +40,9 @@ const getCurrentTime = tool({
  * Tool to evaluate a mathematical expression.
  */
 const calculate = tool({
-  description: "Evaluate a simple mathematical expression like '2 + 2' or '10 * 5'",
-  parameters: z.object({
+  description:
+    "Evaluate a simple mathematical expression like '2 + 2' or '10 * 5'",
+  inputSchema: z.object({
     expression: z.string().describe("The mathematical expression to evaluate"),
   }),
   execute: async ({ expression }) => {
@@ -81,9 +87,13 @@ export interface AgentResult {
  * then provide a final response.
  *
  * @param userMessage - The user's input message
+ * @param maxSteps - Maximum number of tool-calling steps (default: 3)
  * @returns The agent's response and any tool calls made
  */
-export async function runAgent(userMessage: string, maxSteps = 3): Promise<AgentResult> {
+export async function runAgent(
+  userMessage: string,
+  maxSteps = 3,
+): Promise<AgentResult> {
   const { text, toolCalls, toolResults } = await generateText({
     model: anthropic("claude-sonnet-4-20250514"),
     tools,
@@ -108,7 +118,7 @@ export async function runAgent(userMessage: string, maxSteps = 3): Promise<Agent
  * Example demonstrating how to use the agent.
  */
 export async function example(): Promise<void> {
-  console.log("=== Vercel AI SDK Agent Example ===\n");
+  console.log("=== AI SDK Agent Example ===\n");
 
   // Test with a time question
   console.log("Q: What time is it right now?");
@@ -120,4 +130,3 @@ export async function example(): Promise<void> {
   const calcResult = await runAgent("What is 42 * 17 + 123?");
   console.log(`A: ${calcResult.text}\n`);
 }
-
