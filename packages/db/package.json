@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.5.0",
-    "zod": "^3.25.49"
+    "zod": "^4.0.0"
   },
   "devDependencies": {
     "@acme/config": "workspace:*",
