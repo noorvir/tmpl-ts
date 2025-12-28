@@ -14,6 +14,7 @@
     "auth:generate": "bun --filter @acme/auth generate",
     "db:push": "turbo -F @acme/db push",
     "db:studio": "turbo -F @acme/db studio",
+    "generate:clients": "turbo -F @acme/clients codegen",
     "dev": "turbo watch dev --continue",
     "dev:next": "turbo watch dev -F @acme/web...",
     "format": "turbo run format --continue -- --cache --cache-location .cache/.prettiercache",

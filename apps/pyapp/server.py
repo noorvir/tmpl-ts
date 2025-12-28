@@ -1,3 +1,6 @@
+import json
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -14,6 +17,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.on_event("startup")
+async def dump_openapi_spec():
+    """Dump OpenAPI spec on startup (runs on every hot reload)"""
+    spec_path = Path(__file__).parent / "openapi.json"
+    with open(spec_path, "w") as f:
+        json.dump(app.openapi(), f, indent=2)
+    print(f"OpenAPI spec written to {spec_path}")
 
 
 @app.get("/")

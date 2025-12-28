@@ -644,6 +644,77 @@ export const env = createEnv({
   return changes;
 }
 
+/**
+ * Update the clients package when pyapp is removed.
+ * Removes pyapp generated files and updates package.json.
+ */
+function updateClientsPackage(args: { appsToKeep: string[] }): string[] {
+  const { appsToKeep } = args;
+  const changes: string[] = [];
+  const clientsDir = path.join(ROOT_DIR, "packages", "clients");
+
+  // If pyapp is removed, update the clients package
+  if (!appsToKeep.includes("pyapp")) {
+    // Remove generated pyapp client files
+    const pyappDir = path.join(clientsDir, "src", "pyapp");
+    if (fs.existsSync(pyappDir)) {
+      fs.rmSync(pyappDir, { recursive: true, force: true });
+      changes.push("Deleted packages/clients/src/pyapp/");
+    }
+
+    // Update the index.ts to remove pyapp export
+    const indexPath = path.join(clientsDir, "src", "index.ts");
+    if (fs.existsSync(indexPath)) {
+      const emptyIndex = `/**
+ * Generated API clients
+ *
+ * This package contains auto-generated TypeScript clients from OpenAPI specs.
+ * Run \`bun run generate:clients\` to regenerate after API changes.
+ *
+ * To add a new API client:
+ * 1. Add an openapi.json file to your API app
+ * 2. Update the codegen script in package.json
+ * 3. Re-export the generated client here
+ */
+`;
+      fs.writeFileSync(indexPath, emptyIndex, "utf-8");
+      changes.push("Updated packages/clients/src/index.ts (removed pyapp)");
+    }
+
+    // Update package.json to remove pyapp exports and codegen script
+    const pkgPath = path.join(clientsDir, "package.json");
+    if (fs.existsSync(pkgPath)) {
+      const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf-8"));
+      let changed = false;
+
+      if (pkg.exports && pkg.exports["./pyapp"]) {
+        delete pkg.exports["./pyapp"];
+        changed = true;
+      }
+      if (pkg.exports && pkg.exports["./pyapp/react-query"]) {
+        delete pkg.exports["./pyapp/react-query"];
+        changed = true;
+      }
+
+      // Update codegen script to be a placeholder
+      if (pkg.scripts && pkg.scripts.codegen) {
+        pkg.scripts.codegen =
+          "echo 'No API clients configured. Update this script to generate clients from your OpenAPI specs.'";
+        changed = true;
+      }
+
+      if (changed) {
+        fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n", "utf-8");
+        changes.push(
+          "Updated packages/clients/package.json (removed pyapp exports)",
+        );
+      }
+    }
+  }
+
+  return changes;
+}
+
 // Reinitialize git repository
 function reinitializeGit(): boolean {
   const gitDir = path.join(ROOT_DIR, ".git");
@@ -858,6 +929,15 @@ async function main() {
     spinner.stop(`Removed apps: ${removedApps.join(", ")}`);
   } else {
     spinner.stop("Keeping all apps");
+  }
+
+  // Update clients package if pyapp was removed
+  spinner.start("Updating clients package");
+  const clientsChanges = updateClientsPackage({ appsToKeep });
+  if (clientsChanges.length > 0) {
+    spinner.stop(`Updated clients package (${clientsChanges.length} changes)`);
+  } else {
+    spinner.stop("Clients package unchanged");
   }
 
   if (!keepAuth) {

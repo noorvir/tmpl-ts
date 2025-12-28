@@ -1,0 +1,13 @@
+---
+globs: *.py
+alwaysApply: false
+---
+# Testing Guidelines
+
+## No Mocks by Default
+
+Never use mocks in tests unless the user explicitly requests it. Prefer:
+- Unit tests with real implementations
+- Full integration tests
+
+Mocking hides real behavior and can mask bugs. Tests should exercise actual code paths.

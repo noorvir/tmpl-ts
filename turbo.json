@@ -43,6 +43,10 @@
     "ui-add": {
       "cache": false,
       "interactive": true
+    },
+    "codegen": {
+      "cache": false,
+      "outputs": ["src/**"]
     }
   },
   "globalEnv": [
