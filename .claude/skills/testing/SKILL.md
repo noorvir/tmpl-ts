@@ -1,7 +1,9 @@
 ---
-globs: *.py
-alwaysApply: false
+name: testing
+description: Testing guidelines. Auto-apply when writing or modifying tests. No mocks by default — prefer real implementations and integration tests.
+user-invocable: false
 ---
+
 # Testing Guidelines
 
 ## No Mocks by Default

@@ -1,6 +1,0 @@
----
-description: 
-globs: 
-alwaysApply: true
----
-All file names should be kebab-case by default. This applies to react components too.
