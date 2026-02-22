@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "bun:test";
 
 import { runAgent as runAiSdkAgent } from "./agent";
 import { runAgent as runLangGraphAgent } from "./langgraph-example";
@@ -15,7 +15,7 @@ describe("AI Agents", () => {
     it("should use tools when asked for calculations", async () => {
       const result = await runAiSdkAgent(
         "Use the calculate tool to compute 42 * 17 + 123 and tell me the result",
-        3
+        3,
       );
 
       expect(result.text).toBeDefined();
@@ -36,7 +36,7 @@ describe("AI Agents", () => {
 
     it("should perform calculations using the calculate tool", async () => {
       const result = await runLangGraphAgent(
-        "Use the calculate tool to compute 42 * 17 + 123"
+        "Use the calculate tool to compute 42 * 17 + 123",
       );
 
       expect(result.response).toBeDefined();

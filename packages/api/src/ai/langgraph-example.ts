@@ -14,7 +14,7 @@
  *   const response = await runAgent("What time is it?");
  *
  * Environment:
- *   OPENAI_API_KEY: Required for the OpenAI LLM
+ *   ANTHROPIC_API_KEY: Required for the Anthropic LLM
  */
 
 import { ChatAnthropic } from "@langchain/anthropic";
@@ -22,7 +22,7 @@ import { AIMessage, BaseMessage, HumanMessage } from "@langchain/core/messages";
 import { tool } from "@langchain/core/tools";
 import { Annotation, END, START, StateGraph } from "@langchain/langgraph";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
-import { z } from "zod/v4";
+import { z } from "zod/v3";
 
 // --- State Definition ---
 
@@ -43,9 +43,11 @@ type AgentStateType = typeof AgentState.State;
 
 /**
  * Tool to get the current time.
+ * Using the tool() wrapper function for proper type inference.
  */
+// @ts-expect-error - LangChain tool types cause deep instantiation with Zod
 const getCurrentTime = tool(
-  async () => {
+  async (_input) => {
     return new Date().toISOString();
   },
   {
@@ -62,9 +64,12 @@ const getCurrentTime = tool(
 
 /**
  * Tool to evaluate a mathematical expression.
+ * The input type is inferred from the Zod schema.
  */
+// @ts-expect-error - LangChain tool types cause deep instantiation with Zod
 const calculate = tool(
-  async ({ expression }: { expression: string }) => {
+  async (input) => {
+    const { expression } = input;
     const allowed = new Set("0123456789+-*/(). ".split(""));
     if (![...expression].every((c) => allowed.has(c))) {
       return "Error: Invalid characters in expression";
@@ -140,8 +145,10 @@ export function createAgentGraph() {
     temperature: 0,
   });
 
+  // @ts-expect-error - LangGraph StateGraph types cause deep instantiation with Zod
   const graph = new StateGraph(AgentState)
     .addNode("agent", createAgentNode(llm))
+    // @ts-expect-error - LangGraph ToolNode types cause deep instantiation
     .addNode("tools", new ToolNode(tools))
     .addEdge(START, "agent")
     .addConditionalEdges("agent", shouldContinue)
@@ -171,10 +178,11 @@ export async function runAgent(userMessage: string): Promise<AgentResult> {
   });
 
   const lastMessage = result.messages[result.messages.length - 1];
-  const response =
-    lastMessage instanceof AIMessage
+  const response = lastMessage
+    ? lastMessage instanceof AIMessage
       ? (lastMessage.content as string)
-      : String(lastMessage.content);
+      : String(lastMessage.content)
+    : "";
 
   return {
     response,

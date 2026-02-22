@@ -114,3 +114,6 @@ ENV/
 
 # Marimo
 __marimo__/
+
+# Claude Code
+.claude/settings.local.json

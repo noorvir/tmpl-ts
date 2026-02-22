@@ -15,7 +15,7 @@
  */
 
 import { anthropic } from "@ai-sdk/anthropic";
-import { generateText, tool } from "ai";
+import { generateText, stepCountIs, tool } from "ai";
 import { z } from "zod";
 
 // --- Tools ---
@@ -75,8 +75,8 @@ export interface AgentResult {
   text: string;
   toolCalls: Array<{
     toolName: string;
-    args: unknown;
-    result: unknown;
+    input: unknown;
+    output: unknown;
   }>;
 }
 
@@ -97,7 +97,7 @@ export async function runAgent(
   const { text, toolCalls, toolResults } = await generateText({
     model: anthropic("claude-sonnet-4-20250514"),
     tools,
-    maxSteps,
+    stopWhen: stepCountIs(maxSteps),
     system: `You are a helpful assistant. Use the available tools when needed to answer questions accurately.`,
     prompt: userMessage,
   });
@@ -106,8 +106,8 @@ export async function runAgent(
     text,
     toolCalls: toolCalls.map((call, index) => ({
       toolName: call.toolName,
-      args: call.args,
-      result: toolResults[index]?.result,
+      input: call.input,
+      output: toolResults[index]?.output,
     })),
   };
 }
