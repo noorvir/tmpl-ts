@@ -1,13 +1,11 @@
 import { expo } from "@better-auth/expo";
-import { PrismaClient } from "@prisma/client";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { oAuthProxy } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 
 import { env } from "@acme/config/env";
-
-const prisma = new PrismaClient();
+import { prisma } from "@acme/db";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {

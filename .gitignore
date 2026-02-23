@@ -67,6 +67,9 @@ yarn-error.log*
 dist/
 .cache
 
+# Prisma generated client
+packages/db/src/generated/
+
 # turbo
 .turbo
 

@@ -1,8 +1,11 @@
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@prisma/client";
 import { Pool } from "pg";
 
 import { env } from "@acme/config/env";
+
+import { PrismaClient } from "./generated/prisma/client";
+
+export { PrismaClient };
 
 const globalForPrisma = global as unknown as {
   prisma: PrismaClient | undefined;
@@ -19,5 +22,4 @@ const prisma = globalForPrisma.prisma ?? createPrismaClient();
 
 if (env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
-export { Prisma } from "@prisma/client";
 export { prisma };
