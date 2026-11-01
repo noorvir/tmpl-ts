@@ -8,9 +8,11 @@ React Native app with Expo and [twrnc](https://github.com/jaredh159/tailwind-rea
 # From monorepo root
 pnpm install
 
-# Start backend
+<!-- @module api -->
+# Start the API server
 pnpm --filter @acme/server dev
 
+<!-- @end-module -->
 # Start mobile
 cd apps/mobile && npx expo start
 ```

@@ -38,7 +38,7 @@ Chrome runs on port **9225** using `~/.chrome-debug-ai/` as the data directory. 
 
 Always start Chrome in **headless** mode (no `--headful` flag). This prevents the browser from stealing window focus. CDP works identically in headless — screenshots, navigation, console, network all function normally.
 
-Switch to headful only when the user explicitly asks to see the browser (e.g., for manual sign-in or visual debugging). Use `chrome.sh switch` to toggle — tabs are preserved.
+Switch to headful only when the user explicitly asks to see the browser (e.g., for manual login or visual debugging). Use `chrome.sh switch` to toggle — tabs are preserved.
 
 ### First-time setup
 

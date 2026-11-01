@@ -12,5 +12,16 @@
     "react/purity": "warn",
     "react/immutability": "warn"
   },
-  "ignorePatterns": ["**/*.gen.ts", "**/generated/**", "**/dist/**", "**/out/**", "**/.output/**", "**/.expo/**", ".claude/**", ".agents/**"]
+  "ignorePatterns": [
+    // @module mobile
+    "**/.expo/**",
+    // @end-module
+    "**/*.gen.ts",
+    "**/generated/**",
+    "**/dist/**",
+    "**/out/**",
+    "**/.output/**",
+    ".claude/**",
+    ".agents/**"
+  ]
 }

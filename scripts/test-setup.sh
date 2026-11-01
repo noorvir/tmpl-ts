@@ -37,7 +37,6 @@ cleanup() {
 trap cleanup EXIT
 trap 'exit 130' INT TERM
 
-# Every module selected by a selection, as resolved by setup.
 has_module() {
   case ",$1," in
     *",$2,"*) return 0 ;;
@@ -52,15 +51,30 @@ leftover_pattern() {
     auth) echo "better-auth|AUTH_SECRET|@$PROJECT/auth|packages/auth|sign-in" ;;
     ui) echo "@radix-ui|@$PROJECT/ui|packages/ui|lucide-react" ;;
     web) echo "@tanstack/react-start|trpc|apps/web" ;;
-    mobile) echo "expo|react-native|apps/mobile" ;;
-    desktop) echo "electron|apps/desktop" ;;
+    mobile) echo "\\bexpo\\b|@expo/|react-native|apps/mobile" ;;
+    desktop) echo "\\belectron\\b([^-]|$)|electron-(vite|builder|store)|apps/desktop" ;;
     chrome) echo "apps/chrome|@types/chrome|chrome-extension" ;;
-    pyapp) echo "pyapp|marimo|fastapi" ;;
+    pyapp) echo "pyapp|marimo|fastapi|langchain" ;;
     clients) echo "@hey-api|@$PROJECT/clients|packages/clients" ;;
   esac
 }
 
-ALWAYS_REMOVED='@acme|Acme|@module|@end-module|create-t3|t3-oss|turbo|\bbun\b|bunx|bunfig|langchain|@ai-sdk|@clack|eslint'
+# Selected modules bring third-party packages with other names. For example,
+# Prisma Studio brings Radix and Hono. The lockfile search therefore covers its
+# importers, and these main packages of each module in its whole package list.
+lockfile_main_packages() {
+  case "$1" in
+    api) echo "@orpc/server" ;;
+    db) echo "prisma|@prisma/client" ;;
+    auth) echo "better-auth" ;;
+    ui) echo "lucide-react|cmdk" ;;
+    web) echo "@tanstack/react-start|@trpc/server" ;;
+    mobile) echo "expo|react-native" ;;
+    desktop) echo "electron|electron-vite" ;;
+  esac
+}
+
+ALWAYS_REMOVED='@acme|Acme|@module|@end-module|create-t3|t3-oss|turbo|\bbun\b|bunx|bunfig|@ai-sdk|@clack|eslint'
 
 copy_template() {
   local target="$1"
@@ -174,20 +188,44 @@ resolved_modules() {
 }
 
 check_no_leftovers() {
-  local dir="$1" modules="$2" module pattern found=0 files
-  files="$WORK_DIR/files"
+  local dir="$1" modules="$2" module pattern main found=0
+  local files="$WORK_DIR/files"
 
   (
     cd "$dir" || exit 1
-    git init -q . && git ls-files -co --exclude-standard >"$files"
+    git init -q . && git ls-files -co --exclude-standard | grep -v '^pnpm-lock.yaml$' >"$files"
+    awk '/^importers:/{on=1} /^packages:/{on=0} on' pnpm-lock.yaml >"$WORK_DIR/importers"
   ) || return 1
+
+  [ -s "$WORK_DIR/importers" ] || {
+    echo "The lockfile has no importers section"
+    return 1
+  }
+
+  search() {
+    (cd "$dir" && tr '\n' '\0' <"$files" | xargs -0 grep -I -d skip -n "$@")
+  }
 
   for module in api db auth ui web mobile desktop chrome pyapp clients; do
     has_module "$modules" "$module" && continue
     pattern="$(leftover_pattern "$module")"
-    if (cd "$dir" && tr '\n' '\0' <"$files" | xargs -0 grep -I -d skip -l -i -E -- "$pattern") >"$WORK_DIR/hits" 2>/dev/null; then
+
+    if search -i -E -- "$pattern" >"$WORK_DIR/hits"; then
       echo "Leftovers of module $module:"
-      (cd "$dir" && tr '\n' '\0' <"$files" | xargs -0 grep -I -d skip -n -i -E -- "$pattern" | cut -c1-160 | head -20)
+      cut -c1-160 "$WORK_DIR/hits" | head -20
+      found=1
+    fi
+
+    if grep -n -i -E -- "$pattern" "$WORK_DIR/importers" >"$WORK_DIR/hits"; then
+      echo "Lockfile importers have leftovers of module $module:"
+      cut -c1-160 "$WORK_DIR/hits" | head -20
+      found=1
+    fi
+
+    main="$(lockfile_main_packages "$module")"
+    if [ -n "$main" ] && grep -n -E "^  '?($main)@" "$dir/pnpm-lock.yaml" >"$WORK_DIR/hits"; then
+      echo "Lockfile packages have leftovers of module $module:"
+      cut -c1-160 "$WORK_DIR/hits" | head -20
       found=1
     fi
 
@@ -199,13 +237,17 @@ check_no_leftovers() {
     done
   done
 
-  # Third-party packages name Bun in their lockfile metadata. That is not a dependency.
-  if (cd "$dir" && tr '\n' '\0' <"$files" | xargs -0 grep -I -d skip -n -E -- "$ALWAYS_REMOVED" |
-    grep -v -E '^pnpm-lock.yaml:[0-9]+:.*(engines: \{|bun-types-no-globals)' | cut -c1-160 | head -20) | grep .; then
+  # A generator writes the lint comments in the .gen.ts files.
+  if search -E -- "$ALWAYS_REMOVED" | grep -v -E '\.gen\.ts:[0-9]+:.*eslint-disable' | cut -c1-160 | head -20 | grep .; then
     found=1
   fi
 
-  if (cd "$dir" && tr '\n' '\0' <"$files" | grep -z -v 'pnpm-lock.yaml' | xargs -0 grep -I -d skip -n -E -- '"effect"|from "effect') | grep .; then
+  if grep -n -E "^  '?(bun|turbo|eslint|effect)@" "$dir/pnpm-lock.yaml" | grep -v -E "^[0-9]+:  '?effect@" | grep .; then
+    echo "The lockfile has a removed tool"
+    found=1
+  fi
+
+  if search -E -- '"effect"|from "effect' | grep .; then
     found=1
   fi
 
@@ -215,6 +257,21 @@ check_no_leftovers() {
   }
 
   return "$found"
+}
+
+# A search that cannot fail proves nothing, so it must find a planted leftover.
+check_leftover_search_finds_plant() {
+  local dir="$1" modules="$2"
+  local plant="$dir/packages/utils/src/plant.ts"
+
+  echo 'export const plant = "better-auth";' >"$plant"
+  if check_no_leftovers "$dir" "$modules" >/dev/null; then
+    rm -f "$plant"
+    echo "The leftover search missed a planted leftover"
+    return 1
+  fi
+
+  rm -f "$plant"
 }
 
 in_repo() {
@@ -549,6 +606,9 @@ test_selection() {
   step "$selection" interactive check_interactive_matches_flags "$dir" "$selection"
   step "$selection" install in_repo "$dir" pnpm install --no-frozen-lockfile || return
   step "$selection" leftovers check_no_leftovers "$dir" "$modules"
+  if ! has_module "$modules" auth; then
+    step "$selection" plant check_leftover_search_finds_plant "$dir" "$modules"
+  fi
   step "$selection" typecheck in_repo "$dir" pnpm typecheck
   step "$selection" lint in_repo "$dir" pnpm lint
   step "$selection" test in_repo "$dir" pnpm test
@@ -612,7 +672,7 @@ print_table() {
   for selection in "${SELECTIONS[@]}"; do
     row="$selection"
     for name in $steps; do
-      result="$(grep -F "$selection|$name|" "$RESULTS_FILE" | tail -1 | cut -d'|' -f3)"
+      result="$(awk -F'|' -v s="$selection" -v n="$name" '$1 == s && $2 == n { r = $3 } END { print r }' "$RESULTS_FILE")"
       row="$row | ${result:--}"
     done
     echo "$row"

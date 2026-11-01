@@ -507,6 +507,9 @@ async function main() {
   prunePackageJsons({ removed: removedModules, name });
   rewriteTextFiles({ selected, name });
 
+  // An old lockfile keeps optional peers of removed modules, so pnpm must resolve again.
+  fs.rmSync(path.join(ROOT_DIR, "pnpm-lock.yaml"), { force: true });
+
   if (reinitGit) {
     reinitializeGit();
   }
@@ -515,7 +518,7 @@ async function main() {
     removeSetupFiles();
   }
 
-  console.log("Setup is complete. Run `pnpm install` to update the lockfile.");
+  console.log("Setup is complete. Run `pnpm install` to install and create the lockfile.");
 }
 
 main().catch((error: Error) => {

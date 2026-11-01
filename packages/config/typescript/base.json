@@ -20,5 +20,5 @@
     "moduleResolution": "Bundler",
     "noEmit": true
   },
-  "exclude": ["node_modules", "build", "dist", ".output", ".expo"]
+  "exclude": ["node_modules", "dist"]
 }

@@ -24,7 +24,10 @@ const config = {
   // @end-module
   importOrder: [
     "<TYPES>",
-    "^(react/(.*)$)|^(react$)|^(react-native(.*)$)",
+    "^(react/(.*)$)|^(react$)",
+    // @module mobile
+    "^(react-native(.*)$)",
+    // @end-module
     // @module mobile
     "^(expo(.*)$)|^(expo$)",
     // @end-module

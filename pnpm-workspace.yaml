@@ -16,7 +16,9 @@ allowBuilds:
   electron-winstaller: false
   # @end-module
 
+# pnpm wrote this list. These pinned versions are newer than its minimum release age.
 minimumReleaseAgeExclude:
+  # @module auth
   - "@better-auth/core@1.7.15"
   - "@better-auth/drizzle-adapter@1.7.15"
   - "@better-auth/kysely-adapter@1.7.15"
@@ -24,9 +26,16 @@ minimumReleaseAgeExclude:
   - "@better-auth/mongo-adapter@1.7.15"
   - "@better-auth/prisma-adapter@1.7.15"
   - "@better-auth/telemetry@1.7.15"
+  - better-auth@1.7.15
+  # @end-module
+  # @module ui
   - "@hookform/resolvers@7.0.1"
+  - react-resizable-panels@4.16.0
+  # @end-module
+  # @module web|mobile|desktop|clients
   - "@tanstack/query-core@5.105.1"
   - "@tanstack/react-query@5.105.1"
-  - better-auth@1.7.15
+  # @end-module
+  # @module api
   - hono@4.13.16
-  - react-resizable-panels@4.16.0
+  # @end-module
