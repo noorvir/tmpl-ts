@@ -1,3 +1,17 @@
+# Tools
+
+Use pnpm 12 and TypeScript 7. Use `oxlint` for lint and `node --test` for tests. Pin exact dependency versions.
+
+<!-- @module api -->
+# API
+
+The API uses oRPC with Zod. The contract in `packages/api/src/contract.ts` is the source of truth. Clients import only `@acme/api/contract` and `@acme/api/client`, and never server code.
+
+<!-- @end-module -->
+<!-- @module web -->
+tRPC exists only in `apps/web`, as the backend for that frontend. Its procedures call the API through the typed oRPC client. No package or other app depends on tRPC.
+
+<!-- @end-module -->
 # Code Style
 
 Modelled after [Go code review comments](https://go.dev/wiki/CodeReviewComments).

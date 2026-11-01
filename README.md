@@ -1,77 +1,147 @@
 # Monorepo Template
 
-A monorepo template with web, mobile, desktop, Chrome extension, and Python apps.
+A TypeScript monorepo. It uses pnpm 12 and TypeScript 7.
 
-## Quick Start
+<!-- @module template -->
+## Make a repository from this template
+
+Setup needs only Node 24 or newer. It runs before `pnpm install`.
 
 ```bash
-bun install
-bun run setup
+node scripts/setup.ts --name ray --modules api
+node scripts/setup.ts --name app --modules api,auth
+node scripts/setup.ts --name app --modules api,auth,web
+node scripts/setup.ts          # Interactive
+node scripts/setup.ts --help   # All options
+pnpm install
 ```
 
-The setup wizard will:
-- Set your project name (replaces `@acme`)
-- Choose which apps to keep
-- Optionally remove authentication
+A selection brings what it needs, and the script says so. For example, `auth` brings `db` and `api`. The repository then contains no code, dependency, env var, script or docs for a module that is not selected.
 
-Or run non-interactively:
+| Module | Contents | Needs |
+| --- | --- | --- |
+| `api` | oRPC contract and router, and the Hono API server | |
+| `db` | Prisma database client | |
+| `auth` | better-auth email sign-in, served by the API server | `api`, `db` |
+| `ui` | Shared React components | |
+| `web` | TanStack Start app, with tRPC as its backend for frontend | `api`, `ui` |
+| `mobile` | Expo app. It calls the API if `api` is selected. | |
+| `desktop` | Electron app. It calls the API if `api` is selected. | `ui` |
+| `chrome` | Chrome extension. It does not call the API. | `ui` |
+| `pyapp` | FastAPI and Marimo app, managed by uv | |
+| `clients` | TypeScript clients generated from OpenAPI | `pyapp` |
+
+Test every selection, from a clean copy to a running server:
+
 ```bash
-bun run setup --name myapp --apps web,pyapp --no-auth
+scripts/test-setup.sh
 ```
 
+<!-- @end-module -->
 ## Apps
 
-- `apps/web` - TanStack Start web app
+<!-- @module api -->
+- `apps/server` - Standalone Hono server for the API. It serves `/health` and `/openapi.json`.
+<!-- @end-module -->
+<!-- @module web -->
+- `apps/web` - TanStack Start web app. Its tRPC procedures are its backend for frontend, and they call the API through the oRPC client.
+<!-- @end-module -->
+<!-- @module mobile -->
 - `apps/mobile` - Expo React Native app
+<!-- @end-module -->
+<!-- @module desktop -->
 - `apps/desktop` - Electron desktop app
+<!-- @end-module -->
+<!-- @module chrome -->
 - `apps/chrome` - Chrome extension
-- `apps/pyapp` - Python app with FastAPI and Marimo notebooks (managed by UV)
+<!-- @end-module -->
+<!-- @module pyapp -->
+- `apps/pyapp` - Python app with FastAPI and Marimo notebooks (managed by uv)
+<!-- @end-module -->
 
 ## Packages
 
-- `packages/api` - tRPC API router
-- `packages/auth` - better-auth authentication
+- `packages/config` - Shared TypeScript and Prettier config
+- `packages/utils` - The `tc` and `wrapError` helpers
+<!-- @module api -->
+- `packages/api` - oRPC contract (`/contract`), typed client (`/client`), router (`/router`) and OpenAPI document (`/openapi`). Clients import `/contract` and `/client`, which contain no server code.
+<!-- @end-module -->
+<!-- @module auth -->
+- `packages/auth` - better-auth configuration
+<!-- @end-module -->
+<!-- @module clients -->
 - `packages/clients` - Generated OpenAPI clients (TypeScript + React Query)
+<!-- @end-module -->
+<!-- @module db -->
 - `packages/db` - Prisma database client
+<!-- @end-module -->
+<!-- @module ui -->
 - `packages/ui` - Shared UI components
+<!-- @end-module -->
 
 ## Development
 
 ```bash
-bun dev          # Start all apps
-bun run build    # Build all packages
-bun run typecheck
+cp .env.example .env
+pnpm install
+pnpm dev
+pnpm typecheck
+pnpm lint
+pnpm test
+pnpm build
 ```
+<!-- @module db -->
+
+### Database
+
+Set `DATABASE_URL` in `.env`, then push the schema:
+
+```bash
+pnpm db:push
+```
+<!-- @end-module -->
+<!-- @module api -->
+
+### API
+
+Add a route to the contract in `packages/api/src/contract.ts`, then implement it in `packages/api/src/router.ts`. The server publishes the route in `/openapi.json`.
+
+```typescript
+import { createApiClient } from "@acme/api/client";
+
+const api = createApiClient({ url: "http://127.0.0.1:3001" });
+const health = await api.health.check();
+```
+<!-- @end-module -->
+<!-- @module pyapp -->
 
 ### Python App
 
-The Python app uses [UV](https://docs.astral.sh/uv/) for dependency management:
+The Python app uses [uv](https://docs.astral.sh/uv/) for dependency management:
 
 ```bash
 cd apps/pyapp
 uv sync                                    # Install dependencies
 uv run python server.py                    # Start FastAPI server
-uv run marimo edit notebooks/example.py   # Open Marimo notebook
+uv run marimo edit notebooks/example.py    # Open Marimo notebook
 ```
+<!-- @end-module -->
+<!-- @module clients -->
 
-### API Clients
+### Generated Clients
 
 Generate TypeScript clients from OpenAPI specs:
 
 ```bash
-bun run clients:codegen   # Regenerate all clients
-bun run clients:add       # Add a new client (interactive)
+pnpm clients:codegen                                        # Regenerate all clients
+pnpm clients:add --spec path/to/openapi.json --name my-api  # Add a client
 ```
-
-Usage:
 
 ```typescript
 import { pyapp, pyappQueries } from "@acme/clients";
 
-// SDK
 await pyapp.healthCheck();
 
-// React Query
 const { data } = useQuery(pyappQueries.healthCheckOptions());
 ```
-
+<!-- @end-module -->

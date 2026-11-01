@@ -1,19 +1,27 @@
 ---
 name: trpc
-description: tRPC usage patterns with React Query. Auto-apply when writing or modifying tRPC queries, mutations, or API calls in React components.
+description: tRPC usage patterns with React Query in apps/web. Auto-apply when writing or modifying tRPC procedures, queries or mutations in the web app.
 user-invocable: false
 ---
 
 # tRPC Usage Guide
 
-This project uses tRPC with React Query for type-safe API calls.
+tRPC exists only in `apps/web`, as the backend for that frontend. A procedure in `apps/web/src/trpc/router.ts` calls the API through `ctx.api`, the typed oRPC client. It does not import server code. Other apps call the API directly with `@acme/api/client`.
+
+```typescript
+export const appRouter = createRouter({
+  health: {
+    check: publicProcedure.query(({ ctx }) => ctx.api.health.check()),
+  },
+});
+```
 
 ## Imports
 
 ```typescript
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { useTRPC } from '@/trpc/client';
+import { useTRPC } from '~/trpc/react';
 ```
 
 ## Basic Pattern
@@ -57,8 +65,8 @@ const handleAction = async (event: React.MouseEvent, id: string) => {
     await mutation.mutateAsync({ id });
     query.refetch();
     toast.success('Action completed successfully');
-  } catch (error: any) {
-    toast.error(error.message || 'Action failed');
+  } catch (error) {
+    toast.error('Action failed');
   }
 };
 ```

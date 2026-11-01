@@ -6,10 +6,10 @@ React Native app with Expo and [twrnc](https://github.com/jaredh159/tailwind-rea
 
 ```bash
 # From monorepo root
-bun install
+pnpm install
 
 # Start backend
-cd apps/web && bun dev
+pnpm --filter @acme/server dev
 
 # Start mobile
 cd apps/mobile && npx expo start
