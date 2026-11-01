@@ -40,26 +40,13 @@ out/
 
 # @end-module
 # @module mobile
-# Expo and React Native
-.expo/
-expo-env.d.ts
-apps/mobile/ios/
-apps/mobile/android/
-*.ipa
-*.apk
-*.aab
-Pods/
-*.xcworkspace
-!*.xcworkspace/contents.xcworkspacedata
-*.xcuserdata/
-*.keystore
-!debug.keystore
-.gradle/
-.metro-health-check*
+# Swift and Xcode
+.build/
+.swiftpm/
+Package.resolved
 DerivedData/
-*.dSYM.zip
-*.dSYM
-*.jsbundle
+xcuserdata/
+*.xcuserstate
 
 # @end-module
 # @module pyapp

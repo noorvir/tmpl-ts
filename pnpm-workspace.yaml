@@ -32,7 +32,7 @@ minimumReleaseAgeExclude:
   - "@hookform/resolvers@7.0.1"
   - react-resizable-panels@4.16.0
   # @end-module
-  # @module web|mobile|desktop|clients
+  # @module web|desktop|clients
   - "@tanstack/query-core@5.105.1"
   - "@tanstack/react-query@5.105.1"
   # @end-module

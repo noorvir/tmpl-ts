@@ -13,9 +13,6 @@
     "react/immutability": "warn"
   },
   "ignorePatterns": [
-    // @module mobile
-    "**/.expo/**",
-    // @end-module
     "**/*.gen.ts",
     "**/generated/**",
     "**/dist/**",

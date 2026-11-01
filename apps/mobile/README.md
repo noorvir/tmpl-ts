@@ -1,71 +1,23 @@
-# Mobile App (Expo)
+# Mobile App (SwiftUI)
 
-React Native app with Expo and [twrnc](https://github.com/jaredh159/tailwind-react-native-classnames) for Tailwind styling.
+A native iOS app. Android is not part of this template.
 
-## Quick Start
+- `Sources/AppFeature` - Views and code, in a Swift package. `swift build` compiles it with no Xcode.
+- `ios/App.xcodeproj` - The iOS app target. It needs Xcode.
 
 ```bash
-# From monorepo root
-pnpm install
-
-<!-- @module api -->
-# Start the API server
-pnpm --filter @acme/server dev
-
-<!-- @end-module -->
-# Start mobile
-cd apps/mobile && npx expo start
+open ios/App.xcodeproj
+pnpm build:ios   # Build for the simulator
 ```
-
-Then:
-- Press `i` to open iOS simulator
-- Press `a` to open Android emulator
-- Scan QR code with Expo Go on your phone
-
-## Features
-
-- **Home** - Welcome screen
-- **Location** - GPS location with reverse geocoding
-
-## Styling with twrnc
-
-Uses `twrnc` for Tailwind CSS classes in React Native. This is a lightweight runtime that converts Tailwind classes to RN style objects.
-
-```tsx
-import tw from '@/lib/tw';
-
-// Basic usage
-<View style={tw`flex-1 bg-white dark:bg-black`}>
-  <Text style={tw`text-lg font-bold text-primary`}>Hello</Text>
-</View>
-
-// Conditional styles
-<Pressable style={({ pressed }) => 
-  tw.style(`px-4 py-2 rounded-lg`, pressed && `opacity-70`)
-}>
-
-// Custom colors defined in tailwind.config.js
-<Text style={tw`text-primary`}>Primary color</Text>
-```
-
-### Configuration
-
-- `tailwind.config.js` - Theme colors, breakpoints
-- `lib/tw.ts` - Configured tw instance with dark mode support
-
-## Development
-
-| Command | Description |
-|---------|-------------|
-| `npx expo start` | Start dev server |
-| `npx expo start --clear` | Clear cache and start |
-| `npx expo prebuild` | Generate native projects |
-| `npx expo run:ios` | Build and run on iOS |
-
-## Notes
-
-- Uses `twrnc` for Tailwind CSS styling (shares theme with web)
 <!-- @module api -->
-- Typed oRPC client configured in `src/utils/api.ts`
+
+## API
+
+`Sources/AppFeature/APIClient.swift` calls the API server. Add each new route of the contract to it. Set `API_URL` in the Xcode scheme to change the server.
+
+Run the tests against a running server:
+
+```bash
+API_URL=http://127.0.0.1:3001 swift test
+```
 <!-- @end-module -->
-- Location requires development build for full functionality

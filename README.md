@@ -25,7 +25,7 @@ A selection brings what it needs, and the script says so. For example, `auth` br
 | `auth` | better-auth email sign-in, served by the API server | `api`, `db` |
 | `ui` | Shared React components | |
 | `web` | TanStack Start app, with tRPC as its backend for frontend | `api`, `ui` |
-| `mobile` | Expo app. It calls the API if `api` is selected. | |
+| `mobile` | Native SwiftUI iOS app. It calls the API if `api` is selected. | |
 | `desktop` | Electron app. It calls the API if `api` is selected. | `ui` |
 | `chrome` | Chrome extension. It does not call the API. | `ui` |
 | `pyapp` | FastAPI and Marimo app, managed by uv | |
@@ -47,7 +47,7 @@ scripts/test-setup.sh
 - `apps/web` - TanStack Start web app. Its tRPC procedures are its backend for frontend, and they call the API through the oRPC client.
 <!-- @end-module -->
 <!-- @module mobile -->
-- `apps/mobile` - Expo React Native app
+- `apps/mobile` - Native SwiftUI iOS app. See its README.
 <!-- @end-module -->
 <!-- @module desktop -->
 - `apps/desktop` - Electron desktop app

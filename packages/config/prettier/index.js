@@ -25,12 +25,6 @@ const config = {
   importOrder: [
     "<TYPES>",
     "^(react/(.*)$)|^(react$)",
-    // @module mobile
-    "^(react-native(.*)$)",
-    // @end-module
-    // @module mobile
-    "^(expo(.*)$)|^(expo$)",
-    // @end-module
     "<THIRD_PARTY_MODULES>",
     "",
     "<TYPES>^@acme",

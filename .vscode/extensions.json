@@ -1,9 +1,6 @@
 {
   "recommendations": [
     "oxc.oxc-vscode",
-    // @module mobile
-    "expo.vscode-expo-tools",
-    // @end-module
     "esbenp.prettier-vscode",
     "yoavbls.pretty-ts-errors",
     "bradlc.vscode-tailwindcss"

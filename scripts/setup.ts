@@ -32,8 +32,8 @@ type Module = {
   packages: string[];
   /** Third-party dependencies to remove from a package.json file, by its folder. */
   dependencies: Record<string, string[]>;
-  /** Scripts to remove from the root package.json. */
-  scripts: string[];
+  /** Scripts to remove from a package.json file, by its folder. */
+  scripts: Record<string, string[]>;
 };
 
 /** The one list of modules and what each one needs. */
@@ -45,18 +45,15 @@ const MODULES: Record<string, Module> = {
       "packages/api",
       ".claude/skills/orpc",
       "apps/server",
-      "apps/mobile/src/utils/api.ts",
+      "apps/mobile/Sources/AppFeature/APIClient.swift",
+      "apps/mobile/Tests",
       "apps/desktop/src/renderer/src/lib",
     ],
     packages: ["api", "server"],
     dependencies: {
-      "apps/mobile": [
-        "@tanstack/react-query",
-        "@babel/plugin-transform-parameters",
-      ],
       "apps/desktop": ["@tanstack/react-query"],
     },
-    scripts: [],
+    scripts: { "apps/mobile": ["test"] },
   },
   db: {
     description: "Prisma database client",
@@ -64,7 +61,7 @@ const MODULES: Record<string, Module> = {
     paths: ["packages/db"],
     packages: ["db"],
     dependencies: {},
-    scripts: ["db:push", "db:studio"],
+    scripts: { ".": ["db:push", "db:studio"] },
   },
   auth: {
     description: "better-auth email sign-in, served by the API server",
@@ -77,7 +74,7 @@ const MODULES: Record<string, Module> = {
     ],
     packages: ["auth"],
     dependencies: {},
-    scripts: [],
+    scripts: {},
   },
   ui: {
     description: "Shared React components",
@@ -87,7 +84,7 @@ const MODULES: Record<string, Module> = {
     dependencies: {
       ".": ["prettier-plugin-tailwindcss"],
     },
-    scripts: [],
+    scripts: {},
   },
   web: {
     description: "TanStack Start app, with tRPC as its backend for frontend",
@@ -95,15 +92,15 @@ const MODULES: Record<string, Module> = {
     paths: ["apps/web", ".claude/skills/trpc", ".claude/skills/frontend-dev"],
     packages: ["web"],
     dependencies: {},
-    scripts: [],
+    scripts: {},
   },
   mobile: {
-    description: "Expo app",
+    description: "Native SwiftUI iOS app",
     needs: [],
     paths: ["apps/mobile"],
     packages: ["mobile"],
     dependencies: {},
-    scripts: [],
+    scripts: {},
   },
   desktop: {
     description: "Electron app",
@@ -111,7 +108,7 @@ const MODULES: Record<string, Module> = {
     paths: ["apps/desktop"],
     packages: ["desktop"],
     dependencies: {},
-    scripts: [],
+    scripts: {},
   },
   chrome: {
     description: "Chrome extension",
@@ -119,7 +116,7 @@ const MODULES: Record<string, Module> = {
     paths: ["apps/chrome"],
     packages: ["chrome-extension"],
     dependencies: {},
-    scripts: [],
+    scripts: {},
   },
   pyapp: {
     description: "FastAPI and Marimo app, managed by uv",
@@ -127,7 +124,7 @@ const MODULES: Record<string, Module> = {
     paths: ["apps/pyapp"],
     packages: [],
     dependencies: {},
-    scripts: [],
+    scripts: {},
   },
   clients: {
     description: "TypeScript clients generated from OpenAPI, starting with pyapp",
@@ -135,7 +132,7 @@ const MODULES: Record<string, Module> = {
     paths: ["packages/clients", "scripts/add-client.ts"],
     packages: ["clients"],
     dependencies: {},
-    scripts: ["clients:codegen", "clients:add"],
+    scripts: { ".": ["clients:codegen", "clients:add"] },
   },
 };
 
@@ -354,7 +351,6 @@ type PackageJson = {
 /** Removes every dependency and script of the unselected modules. */
 function prunePackageJsons(args: { removed: Module[]; name: string }) {
   const { removed, name } = args;
-  const scripts = removed.flatMap((module) => module.scripts);
   const workspacePackages = removed.flatMap((module) =>
     module.packages.map((packageName) => `@acme/${packageName}`),
   );
@@ -378,12 +374,18 @@ function prunePackageJsons(args: { removed: Module[]; name: string }) {
       (module) => module.dependencies[folder] ?? [],
     );
 
+    const scripts = removed.flatMap((module) => module.scripts[folder] ?? []);
+
     updatePackageJson({
       file,
       update: (pkg) => {
         for (const dependency of [...workspacePackages, ...dependencies]) {
           delete pkg.dependencies?.[dependency];
           delete pkg.devDependencies?.[dependency];
+        }
+
+        for (const script of scripts) {
+          delete pkg.scripts?.[script];
         }
       },
     });
@@ -393,9 +395,6 @@ function prunePackageJsons(args: { removed: Module[]; name: string }) {
     file: path.join(ROOT_DIR, "package.json"),
     update: (pkg) => {
       pkg.name = name;
-      for (const script of scripts) {
-        delete pkg.scripts?.[script];
-      }
     },
   });
 }

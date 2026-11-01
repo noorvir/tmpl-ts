@@ -64,6 +64,9 @@ function getUserEmail(userId: string) {
 ### File names
 
 Use `kebab-case` for all file and folder names, including React components.
+<!-- @module mobile -->
+Swift files use `PascalCase`, the Swift convention.
+<!-- @end-module -->
 
 ### Args
 

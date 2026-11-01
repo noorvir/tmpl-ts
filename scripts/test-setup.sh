@@ -19,7 +19,7 @@ TEST_SECRET="test-secret-with-at-least-32-characters"
 if [ "$#" -gt 0 ]; then
   SELECTIONS=("$@")
 else
-  SELECTIONS=(api api,auth api,auth,web web db mobile desktop chrome clients "$ALL_MODULES")
+  SELECTIONS=(api api,auth api,auth,web web db mobile mobile,api desktop chrome clients "$ALL_MODULES")
 fi
 
 WORK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/tmpl-ts-test.XXXXXX")"
@@ -51,7 +51,7 @@ leftover_pattern() {
     auth) echo "better-auth|AUTH_SECRET|@$PROJECT/auth|packages/auth|sign-in" ;;
     ui) echo "@radix-ui|@$PROJECT/ui|packages/ui|lucide-react" ;;
     web) echo "@tanstack/react-start|trpc|apps/web" ;;
-    mobile) echo "\\bexpo\\b|@expo/|react-native|apps/mobile" ;;
+    mobile) echo "swiftui|swift build|xcodeproj|apps/mobile" ;;
     desktop) echo "\\belectron\\b([^-]|$)|electron-(vite|builder|store)|apps/desktop" ;;
     chrome) echo "apps/chrome|@types/chrome|chrome-extension" ;;
     pyapp) echo "pyapp|marimo|fastapi|langchain" ;;
@@ -69,12 +69,11 @@ lockfile_main_packages() {
     auth) echo "better-auth" ;;
     ui) echo "lucide-react|cmdk" ;;
     web) echo "@tanstack/react-start|@trpc/server" ;;
-    mobile) echo "expo|react-native" ;;
     desktop) echo "electron|electron-vite" ;;
   esac
 }
 
-ALWAYS_REMOVED='@acme|Acme|@module|@end-module|create-t3|t3-oss|turbo|\bbun\b|bunx|bunfig|@ai-sdk|@clack|eslint'
+ALWAYS_REMOVED='@acme|Acme|@module|@end-module|create-t3|t3-oss|turbo|\bexpo\b|@expo/|react-native|twrnc|\bbun\b|bunx|bunfig|@ai-sdk|@clack|eslint'
 
 copy_template() {
   local target="$1"
@@ -242,7 +241,7 @@ check_no_leftovers() {
     found=1
   fi
 
-  if grep -n -E "^  '?(bun|turbo|eslint|effect)@" "$dir/pnpm-lock.yaml" | grep -v -E "^[0-9]+:  '?effect@" | grep .; then
+  if grep -n -E "^  '?(bun|turbo|eslint|effect|expo|react-native)@" "$dir/pnpm-lock.yaml" | grep -v -E "^[0-9]+:  '?effect@" | grep .; then
     echo "The lockfile has a removed tool"
     found=1
   fi
@@ -386,6 +385,26 @@ start_api_server() {
 
   wait_for_url "$API_URL/health" || {
     cat "$WORK_DIR/api.log"
+    return 1
+  }
+}
+
+# Xcode is needed to build the iOS target. Without it, only the project files are checked.
+check_ios_project() {
+  local dir="$1/apps/mobile"
+  plutil -lint "$dir/ios/App.xcodeproj/project.pbxproj" "$dir/ios/App/Info.plist"
+}
+
+check_swift_client() {
+  local output
+  output="$(cd "$1/apps/mobile" && API_URL="$API_URL" swift test 2>&1)" || {
+    echo "$output"
+    return 1
+  }
+
+  echo "$output" | grep -q 'createsGreeting() passed' || {
+    echo "The Swift tests did not run against the server"
+    echo "$output"
     return 1
   }
 }
@@ -614,6 +633,19 @@ test_selection() {
   step "$selection" test in_repo "$dir" pnpm test
   step "$selection" build in_repo "$dir" pnpm build || return
 
+  if has_module "$modules" mobile; then
+    step "$selection" ios-project check_ios_project "$dir"
+    if xcodebuild -version >/dev/null 2>&1; then
+      step "$selection" ios-build in_repo "$dir" pnpm --filter "@$PROJECT/mobile" build:ios
+    else
+      echo "  skip  ios-build (no Xcode on this machine)"
+      skip "$selection" ios-build
+    fi
+  else
+    skip "$selection" ios-project
+    skip "$selection" ios-build
+  fi
+
   if has_module "$modules" pyapp; then
     step "$selection" pyapp in_repo "$dir/apps/pyapp" sh -c 'uv sync --quiet && uv run python -c "import server"'
   else
@@ -643,6 +675,10 @@ test_selection() {
   }
   step "$selection" server check_api_server "$dir" "$modules"
 
+  if has_module "$modules" mobile; then
+    step "$selection" swift-client check_swift_client "$dir"
+  fi
+
   if has_module "$modules" auth; then
     step "$selection" sign-in check_auth_on_server "http://127.0.0.1:$web_port"
   else
@@ -665,7 +701,7 @@ test_selection() {
 }
 
 print_table() {
-  local steps="setup interactive install leftovers typecheck lint test build pyapp client-only server sign-in web-to-api web-sign-in web-api-down"
+  local steps="setup interactive install leftovers typecheck lint test build ios-project ios-build pyapp client-only server swift-client sign-in web-to-api web-sign-in web-api-down"
   echo ""
   echo "selection | $(echo "$steps" | sed 's/ / | /g')"
   local selection name result row
