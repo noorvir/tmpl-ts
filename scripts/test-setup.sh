@@ -209,7 +209,8 @@ check_no_leftovers() {
     has_module "$modules" "$module" && continue
     pattern="$(leftover_pattern "$module")"
 
-    if search -i -E -- "$pattern" >"$WORK_DIR/hits"; then
+    # Wheel URLs in uv.lock have hash folders, such as packages/db/00/.
+    if search -i -E -- "$pattern" | grep -v 'files.pythonhosted.org' >"$WORK_DIR/hits"; then
       echo "Leftovers of module $module:"
       cut -c1-160 "$WORK_DIR/hits" | head -20
       found=1
