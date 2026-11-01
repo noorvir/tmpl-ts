@@ -1,13 +1,16 @@
 generator client {
-    provider   = "prisma-client"
-    output     = "../src/generated/prisma"
-    engineType = "client"
+    provider            = "prisma-client"
+    output              = "../src/generated/prisma"
+    engineType          = "client"
+    runtime             = "nodejs"
+    importFileExtension = "ts"
 }
 
 datasource db {
     provider = "postgresql"
 }
 
+// @module auth
 model User {
     id            String    @id
     name          String?
@@ -65,3 +68,4 @@ model Verification {
 
     @@map("verification")
 }
+// @end-module

@@ -1,8 +1,7 @@
 {
-  "extends": "@acme/config/typescript/internal-package",
+  "extends": "@acme/config/typescript/base",
   "compilerOptions": {
-    "types": ["@types/node"]
+    "types": ["node"]
   },
-  "include": ["src"],
-  "exclude": ["node_modules"]
+  "include": ["src"]
 }

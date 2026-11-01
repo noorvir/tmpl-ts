@@ -1,38 +1,24 @@
-import { expo } from "@better-auth/expo";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { oAuthProxy } from "better-auth/plugins";
-import { tanstackStartCookies } from "better-auth/tanstack-start";
 
-import { env } from "@acme/config/env";
-import { prisma } from "@acme/db";
+import type { PrismaClient } from "@acme/db";
 
-export const auth = betterAuth({
-  database: prismaAdapter(prisma, {
-    provider: "postgresql",
-  }),
-  baseURL: env.NEXT_PUBLIC_APP_URL,
-  secret: env.AUTH_SECRET,
-  plugins: [
-    oAuthProxy({
-      /**
-       * Auto-inference blocked by https://github.com/better-auth/better-auth/pull/2891
-       */
-      currentURL: env.NEXT_PUBLIC_APP_URL,
-      productionURL: env.NEXT_PUBLIC_APP_URL,
-    }),
-    expo(),
-    tanstackStartCookies(), // Must be last plugin for TanStack Start cookie handling
-  ],
-  socialProviders: {
-    github: {
-      clientId: "",
-      clientSecret: "",
-      clientKey: "",
-    },
-  },
-  trustedOrigins: ["expo://"],
-});
+/** Returns the auth instance. The server mounts its handler at `/api/auth`. */
+export function createAuth(args: {
+  prisma: PrismaClient;
+  secret: string;
+  baseURL: string;
+  trustedOrigins: string[];
+}) {
+  const { prisma, secret, baseURL, trustedOrigins } = args;
 
-export type Auth = typeof auth;
-export type Session = Auth["$Infer"]["Session"];
+  return betterAuth({
+    database: prismaAdapter(prisma, { provider: "postgresql" }),
+    secret,
+    baseURL,
+    trustedOrigins,
+    emailAndPassword: { enabled: true },
+  });
+}
+
+export type Auth = ReturnType<typeof createAuth>;

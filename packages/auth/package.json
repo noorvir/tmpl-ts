@@ -4,21 +4,18 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": {
-      "default": "./src/auth.ts"
-    }
+    ".": "./src/auth.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@acme/db": "workspace:*",
-    "@better-auth/expo": "^1.4.9",
-    "better-auth": "^1.4.9"
+    "better-auth": "1.7.15"
   },
   "devDependencies": {
     "@acme/config": "workspace:*",
-    "@types/react": "^19.1.6",
-    "eslint": "^9.28.0",
-    "prettier": "^3.5.3",
-    "typescript": "^5.8.3"
-  },
-  "prettier": "@acme/config/prettier"
+    "@types/node": "26.6.6",
+    "typescript": "7.0.2"
+  }
 }

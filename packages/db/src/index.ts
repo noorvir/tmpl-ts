@@ -1,25 +1,12 @@
 import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
 
-import { env } from "@acme/config/env";
-
-import { PrismaClient } from "./generated/prisma/client";
+import { PrismaClient } from "./generated/prisma/client.ts";
 
 export { PrismaClient };
 
-const globalForPrisma = global as unknown as {
-  prisma: PrismaClient | undefined;
-  pool: Pool | undefined;
-};
+export function createPrisma(args: { url: string }) {
+  const { url } = args;
+  const adapter = new PrismaPg({ connectionString: url });
 
-function createPrismaClient() {
-  const pool = new Pool({ connectionString: env.DATABASE_URL });
-  const adapter = new PrismaPg(pool);
   return new PrismaClient({ adapter });
 }
-
-const prisma = globalForPrisma.prisma ?? createPrismaClient();
-
-if (env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
-
-export { prisma };

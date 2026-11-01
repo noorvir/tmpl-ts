@@ -4,34 +4,24 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": {
-      "default": "./src/index.ts"
-    }
+    ".": "./src/index.ts"
   },
   "scripts": {
+    "postinstall": "prisma generate",
     "db:generate": "prisma generate",
-    "db:dev": "prisma migrate dev && bun run db:dump-schema",
-    "db:push": "prisma db push && bun run db:dump-schema",
-    "db:apply": "prisma migrate deploy && bun run db:dump-schema",
-    "db:dump-schema": "./scripts/dump-db-schema.sh",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "db:migrate": "prisma migrate dev",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.0.0",
-    "@prisma/client": "^7.0.0",
-    "pg": "^8.16.0",
-    "zod": "^4.0.0"
+    "@prisma/adapter-pg": "7.10.1",
+    "@prisma/client": "7.10.1"
   },
   "devDependencies": {
     "@acme/config": "workspace:*",
-    "@types/pg": "^8.15.4",
-    "dotenv-cli": "^8.0.0",
-    "eslint": "^9.28.0",
-    "prettier": "^3.5.3",
-    "prisma": "^7.0.0",
-    "typescript": "^5.8.3"
-  },
-  "prettier": "@acme/config/prettier"
+    "@types/node": "26.6.6",
+    "prisma": "7.10.1",
+    "typescript": "7.0.2"
+  }
 }
