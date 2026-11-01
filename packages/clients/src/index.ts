@@ -1,8 +1,6 @@
 /**
- * Generated API clients
- *
- * This package contains auto-generated TypeScript clients from OpenAPI specs.
- * Run `bun run clients:codegen` to regenerate after API changes.
+ * Clients generated from OpenAPI specs.
+ * Run `pnpm clients:codegen` after an API changes.
  */
 
 // pyapp client
