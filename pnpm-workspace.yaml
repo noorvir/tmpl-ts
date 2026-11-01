@@ -1,0 +1,32 @@
+packages:
+  - apps/*
+  - packages/*
+
+allowBuilds:
+  esbuild: false
+  # @module db
+  "@prisma/engines": true
+  prisma: true
+  # @end-module
+  # @module chrome
+  "@parcel/watcher": false
+  # @end-module
+  # @module desktop
+  electron: true
+  electron-winstaller: false
+  # @end-module
+
+minimumReleaseAgeExclude:
+  - "@better-auth/core@1.7.15"
+  - "@better-auth/drizzle-adapter@1.7.15"
+  - "@better-auth/kysely-adapter@1.7.15"
+  - "@better-auth/memory-adapter@1.7.15"
+  - "@better-auth/mongo-adapter@1.7.15"
+  - "@better-auth/prisma-adapter@1.7.15"
+  - "@better-auth/telemetry@1.7.15"
+  - "@hookform/resolvers@7.0.1"
+  - "@tanstack/query-core@5.105.1"
+  - "@tanstack/react-query@5.105.1"
+  - better-auth@1.7.15
+  - hono@4.13.16
+  - react-resizable-panels@4.16.0

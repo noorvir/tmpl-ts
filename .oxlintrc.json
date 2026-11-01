@@ -1,0 +1,16 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "import", "react"],
+  "categories": { "correctness": "error" },
+  "rules": {
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
+    "typescript/consistent-type-imports": "warn",
+    "import/no-cycle": ["error", { "maxDepth": 10 }],
+    "react/rules-of-hooks": "error",
+    "react/exhaustive-deps": "warn",
+    "react/set-state-in-effect": "warn",
+    "react/purity": "warn",
+    "react/immutability": "warn"
+  },
+  "ignorePatterns": ["**/*.gen.ts", "**/generated/**", "**/dist/**", "**/out/**", "**/.output/**", "**/.expo/**", ".claude/**", ".agents/**"]
+}

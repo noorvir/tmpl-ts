@@ -1,105 +1,68 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 node_modules
-.pnp
-.pnp.js
 
 # testing
 coverage
 
-# next.js
-.next/
-out/
-next-env.d.ts
-
-# nitro
-.nitro/
-.output/
-
-# expo / react native
-.expo/
-expo-env.d.ts
-
-# Generated native projects (regenerated via `npx expo prebuild`)
-apps/mobile/ios/
-apps/mobile/android/
-apps/expo/ios/
-apps/expo/android/
-
-# Expo build artifacts
-*.ipa
-*.apk
-*.aab
-
-# CocoaPods (if you ever need to commit ios/, these would still be ignored)
-Pods/
-*.xcworkspace
-!*.xcworkspace/contents.xcworkspacedata
-*.xcuserdata/
-
-# Android build
-*.keystore
-!debug.keystore
-.gradle/
-
 # production
 build
+dist/
+.cache
 
 # misc
 .DS_Store
 *.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+*.log
+*.tmp
+*.temp
 .pnpm-debug.log*
 
 # local env files
 .env
 .env*.local
 
-# vercel
-.vercel
+# @module web
+# TanStack Start
+.nitro/
+.output/
+.tanstack/
+apps/web/src/routeTree.gen.ts
 
-# typescript
-dist/
-.cache
-
+# @end-module
+# @module db
 # Prisma generated client
 packages/db/src/generated/
 
-# turbo
-.turbo
+# @end-module
+# @module desktop
+# Electron
+out/
 
-# Metro bundler
-.metro-health-check*
-
-# Xcode
-DerivedData/
-build/
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-*.hmap
+# @end-module
+# @module mobile
+# Expo and React Native
+.expo/
+expo-env.d.ts
+apps/mobile/ios/
+apps/mobile/android/
 *.ipa
+*.apk
+*.aab
+Pods/
+*.xcworkspace
+!*.xcworkspace/contents.xcworkspacedata
+*.xcuserdata/
+*.keystore
+!debug.keystore
+.gradle/
+.metro-health-check*
+DerivedData/
 *.dSYM.zip
 *.dSYM
-
-# Bundle artifacts
 *.jsbundle
 
-# Temporary files
-*.log
-*.tmp
-*.temp
-
+# @end-module
+# @module pyapp
 # Python
 __pycache__/
 *.py[cod]
@@ -114,9 +77,8 @@ ENV/
 .mypy_cache/
 .ruff_cache/
 .pytest_cache/
-
-# Marimo
 __marimo__/
 
+# @end-module
 # Claude Code
 .claude/settings.local.json

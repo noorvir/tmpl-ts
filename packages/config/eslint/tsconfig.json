@@ -1,5 +1,0 @@
-{
-  "extends": "@acme/config/typescript/base",
-  "include": ["."],
-  "exclude": ["node_modules"]
-}

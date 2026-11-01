@@ -1,10 +1,7 @@
 {
+  // @module pyapp
   "python.defaultInterpreterPath": "${workspaceFolder}/apps/pyapp/.venv/bin/python",
-  "eslint.workingDirectories": [
-    {
-      "mode": "auto"
-    }
-  ],
+  // @end-module
   "tailwindCSS.classAttributes": [
     "class",
     "className",
@@ -17,9 +14,11 @@
     ["tw\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
     ["tw\\.style\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
   ],
+  // @module mobile
   "tailwindCSS.experimental.configFile": {
     "apps/mobile/tailwind.config.js": "apps/mobile/**"
   },
+  // @end-module
   "tailwindCSS.includeLanguages": {
     "typescript": "javascript",
     "typescriptreact": "javascript"

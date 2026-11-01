@@ -4,15 +4,13 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": {
-      "default": "./src/index.ts"
-    }
+    ".": "./src/index.ts"
   },
   "devDependencies": {
     "@acme/config": "workspace:*",
-    "eslint": "^9.28.0",
-    "prettier": "^3.5.3",
-    "typescript": "^5.8.3"
+    "typescript": "7.0.2"
   },
-  "prettier": "@acme/config/prettier"
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  }
 }
