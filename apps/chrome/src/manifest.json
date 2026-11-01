@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Acme Chrome Extension",
+  "name": "Chrome Extension",
   "version": "0.1.0",
-  "description": "A React-based Chrome extension built with the Acme template",
+  "description": "A React-based Chrome extension",
   "permissions": ["activeTab", "storage"],
   "background": {
     "service_worker": "background.js"
@@ -16,7 +16,7 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Acme Extension"
+    "default_title": "Chrome Extension"
   },
   "icons": {
     "16": "icon.svg",

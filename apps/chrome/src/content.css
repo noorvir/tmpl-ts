@@ -1,5 +1,5 @@
 /* Content script styles */
-.acme-extension-widget {
+.extension-widget {
   all: initial;
   font-family:
     system-ui,
@@ -7,6 +7,6 @@
     sans-serif;
 }
 
-.acme-extension-widget * {
+.extension-widget * {
   box-sizing: border-box;
 }

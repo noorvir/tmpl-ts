@@ -5,7 +5,6 @@
   "type": "module",
   "description": "Electron desktop app",
   "main": "./out/main/index.js",
-  "author": "acme",
   "homepage": "https://electron-vite.org",
   "scripts": {
     "build": "pnpm typecheck && electron-vite build",

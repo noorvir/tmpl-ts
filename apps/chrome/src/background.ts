@@ -1,5 +1,5 @@
 chrome.runtime.onInstalled.addListener(() => {
-  console.log("Acme Chrome Extension installed");
+  console.log("Chrome Extension installed");
 });
 
 chrome.action.onClicked.addListener((tab) => {

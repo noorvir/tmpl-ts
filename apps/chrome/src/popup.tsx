@@ -32,7 +32,7 @@ const Popup: React.FC = () => {
   return (
     <div className="bg-background text-foreground w-80 p-4">
       <div className="space-y-4">
-        <h1 className="text-xl font-bold">Acme Extension</h1>
+        <h1 className="text-xl font-bold">Chrome Extension</h1>
 
         <div className="space-y-2">
           <Label htmlFor="current-tab">Current Tab</Label>

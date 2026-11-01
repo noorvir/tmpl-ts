@@ -47,7 +47,7 @@ const ContentWidget: React.FC = () => {
       }}
     >
       <div className="space-y-2">
-        <h3 className="text-sm font-semibold">Acme Extension</h3>
+        <h3 className="text-sm font-semibold">Chrome Extension</h3>
         {messages.map((message, index) => (
           <div key={index} className="rounded bg-gray-100 p-2 text-sm">
             {message}
@@ -64,14 +64,14 @@ const ContentWidget: React.FC = () => {
 // Create and inject the widget
 const createWidget = () => {
   // Check if widget already exists
-  const existingWidget = document.getElementById("acme-extension-widget");
+  const existingWidget = document.getElementById("extension-widget");
   if (existingWidget) {
     return;
   }
 
   // Create container
   const container = document.createElement("div");
-  container.id = "acme-extension-widget";
+  container.id = "extension-widget";
   container.style.all = "initial";
   document.body.appendChild(container);
 
