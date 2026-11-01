@@ -1,0 +1,8 @@
+{
+  "extends": "@acme/config/typescript/base",
+  "compilerOptions": {
+    "erasableSyntaxOnly": true,
+    "types": ["node"]
+  },
+  "include": ["src"]
+}
