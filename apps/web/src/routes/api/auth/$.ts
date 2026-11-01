@@ -2,18 +2,39 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import "@tanstack/react-start";
 
-import { auth } from "@acme/auth";
+import { getEnv } from "~/env";
 
-// === AUTH HANDLER ===
-// To disable auth: delete this file
-// === END AUTH HANDLER ===
+/** Keeps auth cookies on the web origin. The API server owns auth. */
+async function forwardToApi(request: Request) {
+  const { API_URL } = getEnv();
+  const { pathname, search } = new URL(request.url);
+
+  const headers = new Headers(request.headers);
+  headers.delete("host");
+
+  const body = await request.arrayBuffer();
+  const response = await fetch(`${API_URL}${pathname}${search}`, {
+    method: request.method,
+    headers,
+    body: request.method === "GET" ? undefined : body,
+    redirect: "manual",
+  });
+
+  const responseHeaders = new Headers(response.headers);
+  responseHeaders.delete("content-encoding");
+  responseHeaders.delete("content-length");
+
+  return new Response(response.body, {
+    status: response.status,
+    headers: responseHeaders,
+  });
+}
 
 export const Route = createFileRoute("/api/auth/$")({
   server: {
     handlers: {
-      GET: ({ request }) => auth.handler(request),
-      POST: ({ request }) => auth.handler(request),
+      GET: ({ request }) => forwardToApi(request),
+      POST: ({ request }) => forwardToApi(request),
     },
   },
 });
-

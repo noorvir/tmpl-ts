@@ -1,36 +1,10 @@
-import { createEnv } from "@t3-oss/env-core";
 import { z } from "zod";
 
-export const env = createEnv({
-  shared: {
-    NODE_ENV: z
-      .enum(["development", "production", "test"])
-      .default("development"),
-  },
-  /**
-   * Specify your server-side environment variables schema here.
-   * This way you can ensure the app isn't built with invalid env vars.
-   */
-  server: {
-    DATABASE_URL: z.string().url().optional(),
-    AUTH_SECRET: z.string().min(1).optional(),
-  },
-
-  /**
-   * Specify your client-side environment variables schema here.
-   * For them to be exposed to the client, prefix them with `VITE_`.
-   */
-  client: {
-    // VITE_PUBLIC_CLIENTVAR: z.string(),
-  },
-  clientPrefix: "VITE_",
-  /**
-   * Use import.meta.env for Vite apps (process.env doesn't exist in browser)
-   */
-  runtimeEnv: {
-    NODE_ENV: import.meta.env.MODE,
-    DATABASE_URL: import.meta.env.DATABASE_URL,
-    AUTH_SECRET: import.meta.env.AUTH_SECRET,
-  },
-  skipValidation: !!import.meta.env.CI,
+const envSchema = z.object({
+  API_URL: z.url().default("http://127.0.0.1:3001"),
 });
+
+/** Server-side environment of the web app. */
+export function getEnv() {
+  return envSchema.parse(process.env);
+}

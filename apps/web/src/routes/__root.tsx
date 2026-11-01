@@ -29,6 +29,7 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { title: "App" },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
   }),
@@ -68,7 +69,7 @@ function HealthIndicator() {
   const healthQ = useQuery(trpc.health.check.queryOptions());
 
   if (healthQ.isLoading) {
-    return <Badge variant="secondary">checking...</Badge>;
+    return <Badge variant="secondary">Checking…</Badge>;
   }
 
   if (healthQ.isError) {

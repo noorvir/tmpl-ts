@@ -1,47 +1,51 @@
-"use client";
-
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 
 import { Button } from "@acme/ui/button";
 
-export function AuthShowcase({
-  session,
-}: {
-  session: { user: { name?: string | null } } | null;
-}) {
-  const queryClient = useQueryClient();
+import { useTRPC } from "~/trpc/react";
+import { SubmitButton } from "./submit-button";
 
-  if (!session) {
+export function AuthShowcase() {
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+  const sessionQ = useQuery(trpc.auth.getSession.queryOptions());
+
+  const signOutM = useMutation({
+    mutationFn: () =>
+      fetch("/api/auth/sign-out", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: "{}",
+      }),
+    onSettled: () =>
+      queryClient.invalidateQueries({
+        queryKey: trpc.auth.getSession.queryKey(),
+      }),
+  });
+
+  const user = sessionQ.data?.user;
+
+  if (!user) {
     return (
-      <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-          window.location.href = "/api/auth/signin/discord?callbackURL=/";
-        }}
-      >
-        <Button size="lg" type="submit">
-          Sign in with Discord
-        </Button>
-      </form>
+      <Button size="lg" asChild>
+        <Link to="/sign-in" search={{ mode: "sign-in" }}>
+          Sign in
+        </Link>
+      </Button>
     );
   }
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
-      <p className="text-center text-2xl">
-        <span>Logged in as {session.user.name}</span>
-      </p>
-
+      <p className="text-center text-2xl">Signed in as {user.name}</p>
       <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-          await fetch("/api/auth/signout", { method: "POST" });
-          await queryClient.invalidateQueries({ queryKey: ["session"] });
+        onSubmit={(event) => {
+          event.preventDefault();
+          signOutM.mutate();
         }}
       >
-        <Button size="lg" type="submit">
-          Sign out
-        </Button>
+        <SubmitButton label="Sign out" isPending={signOutM.isPending} />
       </form>
     </div>
   );

@@ -1,19 +1,12 @@
 {
   "extends": "@acme/config/typescript/base",
   "compilerOptions": {
-    "lib": ["ES2022", "dom", "dom.iterable"],
+    "lib": ["ES2023", "dom", "dom.iterable"],
     "jsx": "react-jsx",
-    "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"]
     },
-    "module": "ESNext",
-    "target": "ES2022",
-    "moduleResolution": "Bundler",
-    "skipLibCheck": true,
-    "strictNullChecks": true,
-    "types": ["@types/node", "vite/client"]
+    "types": ["node", "vite/client"]
   },
-  "include": ["src"],
-  "exclude": ["node_modules"]
+  "include": ["src"]
 }
