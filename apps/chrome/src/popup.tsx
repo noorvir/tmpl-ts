@@ -5,7 +5,6 @@ import { Button } from "@acme/ui/button";
 import { Input } from "@acme/ui/input";
 import { Label } from "@acme/ui/label";
 
-import "./popup.css";
 
 const Popup: React.FC = () => {
   const [tabInfo, setTabInfo] = useState<{ url?: string; title?: string }>({});

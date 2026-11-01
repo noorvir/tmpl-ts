@@ -100,5 +100,3 @@ if (document.readyState === "loading") {
 } else {
   createWidget();
 }
-
-export {};

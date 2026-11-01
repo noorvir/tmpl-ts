@@ -8,14 +8,18 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
+// @module api
 import { QueryClientProvider } from "@tanstack/react-query";
+// @end-module
 
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/components/use-color-scheme";
 
 import { useTailwind } from "../lib/tw";
+// @module api
 import { queryClient } from "../src/utils/api";
+// @end-module
 
 export { ErrorBoundary } from "expo-router";
 
@@ -53,14 +57,18 @@ function RootLayoutNav() {
   // Initialize twrnc with device context (dark mode, screen size)
   useTailwind();
 
-  return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-        </Stack>
-      </ThemeProvider>
-    </QueryClientProvider>
+  let tree = (
+    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+      </Stack>
+    </ThemeProvider>
   );
+
+  // @module api
+  tree = <QueryClientProvider client={queryClient}>{tree}</QueryClientProvider>;
+
+  // @end-module
+  return tree;
 }

@@ -2,9 +2,8 @@
   "extends": "@acme/config/typescript/base",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "types": ["@types/node"],
+    "types": ["node"],
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }

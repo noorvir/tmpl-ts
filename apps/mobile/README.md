@@ -1,6 +1,6 @@
 # Mobile App (Expo)
 
-React Native app with Expo, tRPC integration, and [twrnc](https://github.com/jaredh159/tailwind-react-native-classnames) for Tailwind styling.
+React Native app with Expo and [twrnc](https://github.com/jaredh159/tailwind-react-native-classnames) for Tailwind styling.
 
 ## Quick Start
 
@@ -63,5 +63,7 @@ import tw from '@/lib/tw';
 ## Notes
 
 - Uses `twrnc` for Tailwind CSS styling (shares theme with web)
-- tRPC client configured in `src/utils/api.ts`
+<!-- @module api -->
+- Typed oRPC client configured in `src/utils/api.ts`
+<!-- @end-module -->
 - Location requires development build for full functionality

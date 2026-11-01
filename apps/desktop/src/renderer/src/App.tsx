@@ -1,10 +1,38 @@
 import React, { useEffect, useState } from "react";
 
+// @module api
+import { useQuery } from "@tanstack/react-query";
+
+import { Badge } from "@acme/ui/badge";
+// @end-module
 import { Button } from "@acme/ui/button";
 import { Input } from "@acme/ui/input";
 import { Label } from "@acme/ui/label";
 
 import Overlay from "./components/Overlay";
+// @module api
+import { api } from "./lib/api";
+// @end-module
+
+// @module api
+function ApiStatus(): React.JSX.Element {
+  const healthQ = useQuery({
+    queryKey: ["health"],
+    queryFn: () => api.health.check(),
+  });
+
+  if (healthQ.isPending) {
+    return <Badge variant="secondary">Checking API…</Badge>;
+  }
+
+  if (healthQ.isError) {
+    return <Badge variant="destructive">API offline</Badge>;
+  }
+
+  return <Badge>API online</Badge>;
+}
+
+// @end-module
 
 function Main(): React.JSX.Element {
   const [text, setText] = useState("");
@@ -29,6 +57,9 @@ function Main(): React.JSX.Element {
   return (
     <div className="mx-auto max-w-xl p-6">
       <h1 className="text-xl font-semibold">Desktop App</h1>
+      {/* @module api */}
+      <ApiStatus />
+      {/* @end-module */}
       <div className="mt-4 grid gap-3">
         <div className="text-muted-foreground text-sm">
           Global hotkey: {hotkey || "(not set)"}

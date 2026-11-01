@@ -8,15 +8,23 @@ import "./index.css";
 import { ThemeProvider } from "@acme/ui/theme";
 import { Toaster } from "@acme/ui/toast";
 
-import { TRPCReactProvider } from "./trpc/react";
+// @module api
+import { QueryClientProvider } from "@tanstack/react-query";
 
+import { queryClient } from "./lib/api";
+// @end-module
+
+let app = <App />;
+
+// @module api
+app = <QueryClientProvider client={queryClient}>{app}</QueryClientProvider>;
+
+// @end-module
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <TRPCReactProvider>
-        <App />
-        <Toaster />
-      </TRPCReactProvider>
+      {app}
+      <Toaster />
     </ThemeProvider>
   </React.StrictMode>,
 );

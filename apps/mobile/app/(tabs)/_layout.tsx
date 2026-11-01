@@ -1,3 +1,4 @@
+import type { ColorValue } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
 
@@ -6,9 +7,23 @@ import { useColorScheme } from "@/components/use-color-scheme";
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
-  color: string;
+  color: ColorValue;
 }) {
-  return <FontAwesome size={24} style={{ marginBottom: -3 }} {...props} />;
+  const { name, color } = props;
+
+  let iconColor: string | undefined;
+  if (typeof color === "string") {
+    iconColor = color;
+  }
+
+  return (
+    <FontAwesome
+      size={24}
+      style={{ marginBottom: -3 }}
+      name={name}
+      color={iconColor}
+    />
+  );
 }
 
 export default function TabLayout() {

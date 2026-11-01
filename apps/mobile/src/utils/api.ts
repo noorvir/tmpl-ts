@@ -1,45 +1,17 @@
 import { QueryClient } from "@tanstack/react-query";
-import { createTRPCClient, httpBatchLink, loggerLink } from "@trpc/client";
-import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
-import superjson from "superjson";
 
-import type { AppRouter } from "@acme/api";
+import { createApiClient } from "@acme/api/client";
 
-// Get the API base URL
-const getBaseUrl = () => {
-  // For physical device, use your computer's IP
-  // For simulator, localhost works
-  return "http://localhost:3000";
-};
-
-// Create a query client
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 30 * 1000, // 30 seconds
+      staleTime: 30 * 1000,
       retry: 1,
     },
   },
 });
 
-// Create tRPC client
-export const trpcClient = createTRPCClient<AppRouter>({
-  links: [
-    loggerLink({
-      enabled: (opts) =>
-        process.env.NODE_ENV === "development" ||
-        (opts.direction === "down" && opts.result instanceof Error),
-    }),
-    httpBatchLink({
-      url: `${getBaseUrl()}/api/trpc`,
-      transformer: superjson,
-    }),
-  ],
-});
+// A physical device needs the IP address of your computer in this variable.
+const url = process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:3001";
 
-// Create tRPC React Query options proxy
-export const trpc = createTRPCOptionsProxy<AppRouter>({
-  client: trpcClient,
-  queryClient,
-});
-
+export const api = createApiClient({ url });
