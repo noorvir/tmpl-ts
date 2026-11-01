@@ -1,5 +1,7 @@
 {
   "extends": "@acme/config/typescript/base",
-  "include": ["src", "*.ts"],
-  "exclude": ["node_modules"]
+  "compilerOptions": {
+    "lib": ["ES2023", "dom", "dom.iterable"]
+  },
+  "include": ["src"]
 }
